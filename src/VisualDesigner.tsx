@@ -2776,6 +2776,12 @@ export const VisualDesigner = (): JSX.Element => {
 
                   {/* Download CV Button */}
                   <button
+                    onClick={() => {
+                      const link = document.createElement("a");
+                      link.href = "/charan_resume.pdf";
+                      link.download = "charan_resume.pdf";
+                      link.click();
+                    }}
                     style={{
                       width: "100%",
                       padding: "16px 24px",
