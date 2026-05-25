@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: *.pdf$
+Disallow: *.zip$
+
+Sitemap: https://saicharan.dev/sitemap.xml
+
+# Google-specific directives
+User-agent: Googlebot
+Allow: /
+
+# Bing-specific directives
+User-agent: Bingbot
+Allow: /
+
+# Crawl delay (optional - set to avoid server overload)
+Crawl-delay: 1
