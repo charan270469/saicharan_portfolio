@@ -25,6 +25,7 @@ import {
   SiGit,
 } from "react-icons/si";
 import { FaCloud } from "react-icons/fa";
+import { updateMetaTags } from "./utils/seoMetaTags";
 
 export const VisualDesigner = (): JSX.Element => {
   const DESIGN_W = 1440;
@@ -233,6 +234,49 @@ export const VisualDesigner = (): JSX.Element => {
       document.body.style.overflow = "unset";
     };
   }, [showAboutMe, showProjectDetail, enlargedArchImage]);
+
+  useEffect(() => {
+    if (showProjectDetail && selectedProject !== null) {
+      const proj = projects.find((p) => p.id === selectedProject);
+      if (proj) {
+        updateMetaTags({
+          title: `${proj.name} Case Study — Sai Charan Portfolio`,
+          description: proj.description,
+          ogTitle: `${proj.name} — AI & Full-Stack Case Study`,
+          ogDescription: proj.description,
+          canonicalUrl: `https://saicharan.dev/#projects`,
+        });
+      }
+    } else if (showAboutMe) {
+      updateMetaTags({
+        title: "About Sai Charan — Full-Stack & AI Engineer Portfolio",
+        description: "Learn more about Sai Charan, a B.Tech student in Data Science & AI with production experience building LLM pipelines, RAG systems, and cloud deployments.",
+        ogTitle: "About Sai Charan — Software Engineer",
+        canonicalUrl: `https://saicharan.dev/#aboutme`,
+      });
+    } else if (activePage === "projects") {
+      updateMetaTags({
+        title: "Featured AI/ML & Full-Stack Projects — Sai Charan",
+        description: "Explore Sai Charan's featured production-ready AI applications, workflow engines, and smart retail systems built with FastAPI, React, Groq, and n8n.",
+        ogTitle: "Featured Work — Sai Charan",
+        canonicalUrl: `https://saicharan.dev/#projects`,
+      });
+    } else if (activePage === "experience") {
+      updateMetaTags({
+        title: "Professional Timeline & Experience — Sai Charan",
+        description: "Professional journey of Sai Charan, including AI development at Viswam.AI, cloud engineering at Mindenious Edutech, and UI/UX design.",
+        ogTitle: "Experience Timeline — Sai Charan Portfolio",
+        canonicalUrl: `https://saicharan.dev/#experience`,
+      });
+    } else {
+      updateMetaTags({
+        title: "Sai Charan – Full-Stack Developer & Software Engineer Portfolio",
+        description: "Sai Charan's portfolio showcasing full-stack development projects including LoanLens, AutoOps, Scango, and MediSense. Expert in React, Python, TypeScript, and cloud technologies.",
+        ogTitle: "Sai Charan – Full-Stack Developer & Software Engineer",
+        canonicalUrl: `https://saicharan.dev`,
+      });
+    }
+  }, [activePage, showAboutMe, showProjectDetail, selectedProject]);
 
   const handleNavClick = (page: string) => {
     if (page === "home") {
@@ -1926,8 +1970,8 @@ export const VisualDesigner = (): JSX.Element => {
         ref={portfolioSectionRef}
         style={{
           width: "100%",
-          minHeight: "100vh",
-          padding: "200px 40px 80px 40px",
+          minHeight: "auto",
+          padding: "80px 40px 60px 40px",
           backgroundColor: "rgba(30, 29, 28, 1)",
           display: "flex",
           flexDirection: "column",
@@ -2124,8 +2168,8 @@ export const VisualDesigner = (): JSX.Element => {
         ref={experienceSectionRef}
         style={{
           width: "100%",
-          minHeight: "100vh",
-          padding: "100px 40px",
+          minHeight: "auto",
+          padding: "60px 40px 40px 40px",
           backgroundColor: "rgba(30, 29, 28, 1)",
           display: "flex",
           flexDirection: "column",
@@ -2146,7 +2190,7 @@ export const VisualDesigner = (): JSX.Element => {
               width: "100%",
               height: 1,
               backgroundColor: "rgba(197, 149, 110, 0.2)",
-              marginBottom: 80,
+              marginBottom: 40,
             }}
           />
 
@@ -2492,7 +2536,7 @@ export const VisualDesigner = (): JSX.Element => {
               width: "100%",
               height: 1,
               backgroundColor: "#c5956e33",
-              marginTop: 80,
+              marginTop: 40,
             }}
           />
         </div>
@@ -2503,8 +2547,8 @@ export const VisualDesigner = (): JSX.Element => {
         ref={contactSectionRef}
         style={{
           width: "100%",
-          minHeight: "85vh",
-          padding: "40px 40px",
+          minHeight: "auto",
+          padding: "60px 40px 80px 40px",
           backgroundColor: "rgba(30, 29, 28, 1)",
           display: "flex",
           flexDirection: "column",
