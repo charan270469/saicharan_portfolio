@@ -216,7 +216,8 @@ export const VisualDesigner = (): JSX.Element => {
     const recalc = () => {
       const scaleX = window.innerWidth / DESIGN_W;
       const scaleY = window.innerHeight / DESIGN_H;
-      setScale(Math.min(scaleX, scaleY));
+      // Cap scale at 1.0 to prevent things from becoming too big on large screens
+      setScale(Math.min(1, scaleX, scaleY));
     };
     recalc();
     window.addEventListener("resize", recalc);
@@ -250,28 +251,33 @@ export const VisualDesigner = (): JSX.Element => {
     } else if (showAboutMe) {
       updateMetaTags({
         title: "About Sai Charan — Full-Stack & AI Engineer Portfolio",
-        description: "Learn more about Sai Charan, a B.Tech student in Data Science & AI with production experience building LLM pipelines, RAG systems, and cloud deployments.",
+        description:
+          "Learn more about Sai Charan, a B.Tech student in Data Science & AI with production experience building LLM pipelines, RAG systems, and cloud deployments.",
         ogTitle: "About Sai Charan — Software Engineer",
         canonicalUrl: `https://saicharan.dev/#aboutme`,
       });
     } else if (activePage === "projects") {
       updateMetaTags({
         title: "Featured AI/ML & Full-Stack Projects — Sai Charan",
-        description: "Explore Sai Charan's featured production-ready AI applications, workflow engines, and smart retail systems built with FastAPI, React, Groq, and n8n.",
+        description:
+          "Explore Sai Charan's featured production-ready AI applications, workflow engines, and smart retail systems built with FastAPI, React, Groq, and n8n.",
         ogTitle: "Featured Work — Sai Charan",
         canonicalUrl: `https://saicharan.dev/#projects`,
       });
     } else if (activePage === "experience") {
       updateMetaTags({
         title: "Professional Timeline & Experience — Sai Charan",
-        description: "Professional journey of Sai Charan, including AI development at Viswam.AI, cloud engineering at Mindenious Edutech, and UI/UX design.",
+        description:
+          "Professional journey of Sai Charan, including AI development at Viswam.AI, cloud engineering at Mindenious Edutech, and UI/UX design.",
         ogTitle: "Experience Timeline — Sai Charan Portfolio",
         canonicalUrl: `https://saicharan.dev/#experience`,
       });
     } else {
       updateMetaTags({
-        title: "Sai Charan – Full-Stack Developer & Software Engineer Portfolio",
-        description: "Sai Charan's portfolio showcasing full-stack development projects including LoanLens, AutoOps, Scango, and MediSense. Expert in React, Python, TypeScript, and cloud technologies.",
+        title:
+          "Sai Charan – Full-Stack Developer & Software Engineer Portfolio",
+        description:
+          "Sai Charan's portfolio showcasing full-stack development projects including LoanLens, AutoOps, Scango, and MediSense. Expert in React, Python, TypeScript, and cloud technologies.",
         ogTitle: "Sai Charan – Full-Stack Developer & Software Engineer",
         canonicalUrl: `https://saicharan.dev`,
       });
@@ -501,10 +507,10 @@ export const VisualDesigner = (): JSX.Element => {
           width: DESIGN_W,
           height: DESIGN_H,
           transform: `scale(${scale})`,
-          transformOrigin: "center center",
+          transformOrigin: "top center",
           position: "relative",
           flexShrink: 0,
-          marginTop: "40px",
+          marginTop: "0px",
           marginBottom: "40px",
         }}
       >
@@ -1525,7 +1531,7 @@ export const VisualDesigner = (): JSX.Element => {
                 style={{
                   position: "relative",
                   width: "98%",
-                  maxWidth: 1800,
+                  maxWidth: 1440,
                   maxHeight: "90vh",
                   backgroundColor: "rgba(30, 29, 28, 1)",
                   borderRadius: 24,
@@ -2014,10 +2020,10 @@ export const VisualDesigner = (): JSX.Element => {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(2, 1fr)",
-            gap: 60,
+            gap: 50,
             justifyContent: "center",
             width: "100%",
-            maxWidth: 1800,
+            maxWidth: 1440,
             margin: "0 auto",
           }}
           className="portfolio-grid"
@@ -2054,7 +2060,7 @@ export const VisualDesigner = (): JSX.Element => {
                 captionText="click for more details"
                 containerHeight="500px"
                 containerWidth="100%"
-                imageHeight="500px"
+                imageHeight="450px"
                 imageWidth="100%"
                 rotateAmplitude={12}
                 scaleOnHover={1.05}
@@ -2180,7 +2186,7 @@ export const VisualDesigner = (): JSX.Element => {
         <div
           style={{
             width: "100%",
-            maxWidth: 1800,
+            maxWidth: 1440,
             margin: "0 auto",
           }}
         >
@@ -2559,7 +2565,7 @@ export const VisualDesigner = (): JSX.Element => {
         <div
           style={{
             width: "100%",
-            maxWidth: 1800,
+            maxWidth: 1440,
             marginBottom: 10,
           }}
         >
