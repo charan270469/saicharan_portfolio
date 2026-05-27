@@ -22,7 +22,7 @@
 .loading-content {
   width: 100%;
   max-width: 800px;
-  padding: 40px;
+  padding: 20px;
 }
 
 .loading-svg {
@@ -34,8 +34,8 @@
 .loading-text {
   font-family: 'Inter', sans-serif;
   font-weight: 900;
-  font-size: 120px;
-  letter-spacing: 8px;
+  font-size: clamp(40px, 15vw, 120px);
+  letter-spacing: clamp(2px, 1vw, 8px);
   text-transform: uppercase;
 }
 

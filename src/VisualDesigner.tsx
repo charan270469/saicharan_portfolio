@@ -291,8 +291,7 @@ export const VisualDesigner = (): JSX.Element => {
       });
     } else {
       updateMetaTags({
-        title:
-          "Sai Charan – Full-Stack Developer & Software Engineer Portfolio",
+        title: "Sai Charan's - Portfolio",
         description:
           "Sai Charan's portfolio showcasing full-stack development projects including LoanLens, AutoOps, Scango, and MediSense. Expert in React, Python, TypeScript, and cloud technologies.",
         ogTitle: "Sai Charan – Full-Stack Developer & Software Engineer",
@@ -558,6 +557,7 @@ export const VisualDesigner = (): JSX.Element => {
                   position: "absolute",
                   inset: 0,
                   background: "rgba(30,29,28,1)",
+                  zIndex: 0,
                 }}
               />
 
@@ -571,6 +571,9 @@ export const VisualDesigner = (): JSX.Element => {
                   height: isMobile ? "auto" : 736,
                   display: showAboutMe ? "none" : "block",
                   minHeight: isMobile ? "500px" : "unset",
+                  order: isMobile ? 3 : 0,
+                  zIndex: 1,
+                  marginTop: isMobile ? "40px" : 0,
                 }}
               >
                 <BorderGlow
@@ -798,7 +801,8 @@ export const VisualDesigner = (): JSX.Element => {
                   gap: 4,
                   alignItems: isMobile ? "center" : "flex-start",
                   zIndex: 20,
-                  marginTop: isMobile ? "20px" : 0,
+                  marginTop: isMobile ? "40px" : 0,
+                  order: isMobile ? 1 : 0,
                 }}
               >
                 <h1
@@ -878,6 +882,7 @@ export const VisualDesigner = (): JSX.Element => {
                       // Minimalist nav for mobile
                       <>
                         {renderNavLink("Home", "home")}
+                        {renderNavLink("AboutMe", "aboutme")}
                         {renderNavLink("Work", "projects")}
                       </>
                     ) : (
@@ -949,7 +954,9 @@ export const VisualDesigner = (): JSX.Element => {
                   alignItems: isMobile ? "center" : "flex-end",
                   pointerEvents: isMobile ? "auto" : "none",
                   marginTop: isMobile ? "40px" : 0,
-                  order: isMobile ? -1 : 0, // Show photo after giant text on mobile
+                  order: isMobile ? 2 : 0, // Show photo between name and card on mobile
+                  zIndex: 5, // Above background and card
+                  minHeight: isMobile ? "300px" : "auto",
                 }}
                 onMouseEnter={handleImageHover}
                 onMouseMove={handleImageMove}
@@ -961,14 +968,15 @@ export const VisualDesigner = (): JSX.Element => {
                   loading="lazy"
                   onClick={handleImageClick}
                   style={{
-                    maxWidth: isMobile ? "80%" : 650,
-                    maxHeight: isMobile ? 400 : 770,
+                    maxWidth: isMobile ? "90%" : 650,
+                    maxHeight: isMobile ? "50vh" : 770,
                     width: "auto",
                     height: "auto",
                     objectFit: "contain",
                     pointerEvents: "auto",
                     cursor: "pointer",
                     transition: "transform 0.3s",
+                    display: "block",
                   }}
                 />
 
@@ -1021,6 +1029,7 @@ export const VisualDesigner = (): JSX.Element => {
                         position: "relative",
                         width: "95%",
                         maxWidth: 1600,
+                        height: isMobile ? "90vh" : "auto",
                         maxHeight: "95vh",
                         backgroundColor: "rgba(30, 29, 28, 1)",
                         borderRadius: 24,
@@ -1099,16 +1108,16 @@ export const VisualDesigner = (): JSX.Element => {
                                 letterSpacing: "-1px",
                               }}
                             >
-                              About Sai Charan (saicharandev)
+                              About Me
                             </h1>
 
                             <p
                               style={{
                                 fontFamily: "'Inter', sans-serif",
                                 fontWeight: 300,
-                                fontSize: "11px",
+                                fontSize: isMobile ? "14px" : "11px",
                                 color: "#d1d4db",
-                                lineHeight: "18px",
+                                lineHeight: isMobile ? "22px" : "18px",
                                 margin: "0 0 12px 0",
                                 maxWidth: "600px",
                               }}
@@ -1133,9 +1142,9 @@ export const VisualDesigner = (): JSX.Element => {
                               style={{
                                 fontFamily: "'Inter', sans-serif",
                                 fontWeight: 300,
-                                fontSize: "11px",
+                                fontSize: isMobile ? "14px" : "11px",
                                 color: "#d1d4db",
-                                lineHeight: "18px",
+                                lineHeight: isMobile ? "22px" : "18px",
                                 margin: "0 0 12px 0",
                                 maxWidth: "600px",
                               }}
@@ -1159,9 +1168,9 @@ export const VisualDesigner = (): JSX.Element => {
                               style={{
                                 fontFamily: "'Inter', sans-serif",
                                 fontWeight: 300,
-                                fontSize: "11px",
+                                fontSize: isMobile ? "14px" : "11px",
                                 color: "#d1d4db",
-                                lineHeight: "18px",
+                                lineHeight: isMobile ? "22px" : "18px",
                                 margin: 0,
                                 maxWidth: "600px",
                               }}
@@ -1198,18 +1207,18 @@ export const VisualDesigner = (): JSX.Element => {
                                 gridRow: isMobile ? "auto" : "1 / 2",
                                 backgroundColor: "rgba(70, 70, 70, 0.4)",
                                 borderRadius: 12,
-                                padding: 16,
+                                padding: isMobile ? 20 : 16,
                                 border: "1px solid rgba(255, 255, 255, 0.1)",
                                 display: "flex",
                                 flexDirection: "column",
-                                gap: 8,
+                                gap: 12,
                               }}
                             >
                               <h3
                                 style={{
                                   fontFamily: "'Inter', sans-serif",
                                   fontWeight: 800,
-                                  fontSize: "14px",
+                                  fontSize: isMobile ? "18px" : "14px",
                                   color: "#d1d4db",
                                   margin: 0,
                                   letterSpacing: "-0.3px",
@@ -1221,9 +1230,9 @@ export const VisualDesigner = (): JSX.Element => {
                                 style={{
                                   fontFamily: "'Inter', sans-serif",
                                   fontWeight: 300,
-                                  fontSize: "11px",
+                                  fontSize: isMobile ? "13px" : "11px",
                                   color: "#feddb1",
-                                  lineHeight: "16px",
+                                  lineHeight: isMobile ? "20px" : "16px",
                                   margin: 0,
                                 }}
                               >
@@ -1292,18 +1301,18 @@ export const VisualDesigner = (): JSX.Element => {
                                 gridRow: isMobile ? "auto" : "2 / 3",
                                 backgroundColor: "rgba(70, 70, 70, 0.4)",
                                 borderRadius: 12,
-                                padding: 12,
+                                padding: isMobile ? 16 : 12,
                                 border: "1px solid rgba(255, 255, 255, 0.1)",
                                 display: "flex",
                                 flexDirection: "column",
-                                gap: 8,
+                                gap: 10,
                               }}
                             >
                               <h3
                                 style={{
                                   fontFamily: "'Inter', sans-serif",
                                   fontWeight: 800,
-                                  fontSize: "14px",
+                                  fontSize: isMobile ? "16px" : "14px",
                                   color: "#d1d4db",
                                   margin: 0,
                                   letterSpacing: "-0.2px",
@@ -1315,7 +1324,7 @@ export const VisualDesigner = (): JSX.Element => {
                                 style={{
                                   display: "flex",
                                   flexWrap: "wrap",
-                                  gap: 6,
+                                  gap: 8,
                                 }}
                               >
                                 {[
@@ -1329,12 +1338,14 @@ export const VisualDesigner = (): JSX.Element => {
                                   <span
                                     key={skill}
                                     style={{
-                                      fontSize: "10px",
+                                      fontSize: isMobile ? "12px" : "10px",
                                       color: "#d1d4db",
                                       backgroundColor:
                                         "rgba(210, 180, 139, 0.1)",
-                                      padding: "2px 6px",
-                                      borderRadius: 3,
+                                      padding: isMobile
+                                        ? "4px 10px"
+                                        : "2px 6px",
+                                      borderRadius: 4,
                                       fontFamily: "'Inter', sans-serif",
                                       fontWeight: 500,
                                     }}
@@ -1352,18 +1363,18 @@ export const VisualDesigner = (): JSX.Element => {
                                 gridRow: isMobile ? "auto" : "2 / 3",
                                 backgroundColor: "rgba(70, 70, 70, 0.4)",
                                 borderRadius: 12,
-                                padding: 12,
+                                padding: isMobile ? 16 : 12,
                                 border: "1px solid rgba(255, 255, 255, 0.1)",
                                 display: "flex",
                                 flexDirection: "column",
-                                gap: 8,
+                                gap: 10,
                               }}
                             >
                               <h3
                                 style={{
                                   fontFamily: "'Inter', sans-serif",
                                   fontWeight: 800,
-                                  fontSize: "14px",
+                                  fontSize: isMobile ? "16px" : "14px",
                                   color: "#d1d4db",
                                   margin: 0,
                                   letterSpacing: "-0.2px",
@@ -1375,7 +1386,7 @@ export const VisualDesigner = (): JSX.Element => {
                                 style={{
                                   display: "flex",
                                   flexWrap: "wrap",
-                                  gap: 6,
+                                  gap: 8,
                                 }}
                               >
                                 {[
@@ -1389,12 +1400,14 @@ export const VisualDesigner = (): JSX.Element => {
                                   <span
                                     key={skill}
                                     style={{
-                                      fontSize: "10px",
+                                      fontSize: isMobile ? "12px" : "10px",
                                       color: "#d1d4db",
                                       backgroundColor:
                                         "rgba(210, 180, 139, 0.1)",
-                                      padding: "2px 6px",
-                                      borderRadius: 3,
+                                      padding: isMobile
+                                        ? "4px 10px"
+                                        : "2px 6px",
+                                      borderRadius: 4,
                                       fontFamily: "'Inter', sans-serif",
                                       fontWeight: 500,
                                     }}
@@ -1412,18 +1425,18 @@ export const VisualDesigner = (): JSX.Element => {
                                 gridRow: isMobile ? "auto" : "3 / 4",
                                 backgroundColor: "rgba(210, 180, 139, 0.12)",
                                 borderRadius: 12,
-                                padding: 16,
+                                padding: isMobile ? 20 : 16,
                                 border: "1px solid rgba(210, 180, 139, 0.3)",
                                 display: "flex",
                                 flexDirection: "column",
-                                gap: 8,
+                                gap: 12,
                               }}
                             >
                               <h3
                                 style={{
                                   fontFamily: "'Inter', sans-serif",
                                   fontWeight: 800,
-                                  fontSize: "14px",
+                                  fontSize: isMobile ? "18px" : "14px",
                                   color: "#d2b48b",
                                   margin: 0,
                                   letterSpacing: "-0.3px",
@@ -1435,9 +1448,9 @@ export const VisualDesigner = (): JSX.Element => {
                                 style={{
                                   fontFamily: "'Inter', sans-serif",
                                   fontWeight: 300,
-                                  fontSize: "11px",
+                                  fontSize: isMobile ? "13px" : "11px",
                                   color: "#ffffff",
-                                  lineHeight: "16px",
+                                  lineHeight: isMobile ? "20px" : "16px",
                                   margin: 0,
                                 }}
                               >
@@ -1860,9 +1873,11 @@ export const VisualDesigner = (): JSX.Element => {
                                   style={{
                                     fontFamily: "'Inter', sans-serif",
                                     fontWeight: 300,
-                                    fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
+                                    fontSize: isMobile
+                                      ? "14px"
+                                      : "clamp(0.875rem, 1.2vw, 1rem)",
                                     color: "#d1d4db",
-                                    lineHeight: "28px",
+                                    lineHeight: isMobile ? "24px" : "28px",
                                     margin: "0 0 20px 0",
                                     maxWidth: "1000px",
                                   }}
@@ -1874,7 +1889,9 @@ export const VisualDesigner = (): JSX.Element => {
                                   style={{
                                     fontFamily: "'Inter', sans-serif",
                                     fontWeight: 700,
-                                    fontSize: "clamp(1.1rem, 1.5vw, 1.25rem)",
+                                    fontSize: isMobile
+                                      ? "18px"
+                                      : "clamp(1.1rem, 1.5vw, 1.25rem)",
                                     color: "#d2b48b",
                                     margin: "24px 0 12px 0",
                                   }}
@@ -1886,9 +1903,11 @@ export const VisualDesigner = (): JSX.Element => {
                                   style={{
                                     fontFamily: "'Inter', sans-serif",
                                     fontWeight: 300,
-                                    fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
+                                    fontSize: isMobile
+                                      ? "14px"
+                                      : "clamp(0.875rem, 1.2vw, 1rem)",
                                     color: "#d1d4db",
-                                    lineHeight: "28px",
+                                    lineHeight: isMobile ? "24px" : "28px",
                                     margin: "0 0 30px 0",
                                     maxWidth: "1650px",
                                     whiteSpace: "pre-line",
@@ -1960,9 +1979,15 @@ export const VisualDesigner = (): JSX.Element => {
                                           )
                                         }
                                         style={{
-                                          maxWidth: "2000px",
+                                          width: "100%",
+                                          maxWidth: isMobile
+                                            ? "100%"
+                                            : "2000px",
                                           height: "auto",
-                                          maxHeight: "2000px",
+                                          maxHeight: isMobile
+                                            ? "400px"
+                                            : "2000px",
+                                          objectFit: "contain",
                                           borderRadius: "12px",
                                           border:
                                             "1px solid rgba(201, 138, 94, 0.3)",
@@ -2030,8 +2055,8 @@ export const VisualDesigner = (): JSX.Element => {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        width: "75vw",
-                        height: "75vh",
+                        width: isMobile ? "95vw" : "75vw",
+                        height: isMobile ? "80vh" : "75vh",
                         cursor: "default",
                       }}
                     >
@@ -2111,7 +2136,7 @@ export const VisualDesigner = (): JSX.Element => {
             style={{
               width: "100%",
               minHeight: "auto",
-              padding: "60px 40px",
+              padding: isMobile ? "40px 20px" : "60px 40px",
               backgroundColor: "rgba(30, 29, 28, 1)",
               display: "flex",
               flexDirection: "column",
@@ -2135,7 +2160,7 @@ export const VisualDesigner = (): JSX.Element => {
                   letterSpacing: "-1px",
                 }}
               >
-                SAI CHARAN PORTFOLIO — FEATURED WORK
+                FEATURED WORK
               </h2>
               <p
                 style={{
@@ -2348,7 +2373,7 @@ export const VisualDesigner = (): JSX.Element => {
             style={{
               width: "100%",
               minHeight: "auto",
-              padding: "60px 40px",
+              padding: isMobile ? "40px 20px" : "60px 40px",
               backgroundColor: "rgba(30, 29, 28, 1)",
               display: "flex",
               flexDirection: "column",
@@ -2377,8 +2402,8 @@ export const VisualDesigner = (): JSX.Element => {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 2fr",
-                  gap: 80,
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr 2fr",
+                  gap: isMobile ? 40 : 80,
                   alignItems: "flex-start",
                 }}
               >
@@ -2443,7 +2468,7 @@ export const VisualDesigner = (): JSX.Element => {
                   <div
                     style={{
                       position: "relative",
-                      paddingLeft: 40,
+                      paddingLeft: isMobile ? 24 : 40,
                       borderLeft: "2px solid rgba(197, 149, 110, 0.25)",
                     }}
                   >
@@ -2534,7 +2559,7 @@ export const VisualDesigner = (): JSX.Element => {
                   <div
                     style={{
                       position: "relative",
-                      paddingLeft: 40,
+                      paddingLeft: isMobile ? 24 : 40,
                       borderLeft: "2px solid rgba(197, 149, 110, 0.25)",
                     }}
                   >
@@ -2625,7 +2650,7 @@ export const VisualDesigner = (): JSX.Element => {
                   <div
                     style={{
                       position: "relative",
-                      paddingLeft: 40,
+                      paddingLeft: isMobile ? 24 : 40,
                       borderLeft: "2px solid rgba(197, 149, 110, 0.25)",
                     }}
                   >
