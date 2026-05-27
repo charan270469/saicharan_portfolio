@@ -9,14 +9,12 @@ import React, {
 export type LogoItem =
   | {
       node: React.ReactNode;
-      href?: string;
       title?: string;
       ariaLabel?: string;
     }
   | {
       src: string;
       alt?: string;
-      href?: string;
       title?: string;
       srcSet?: string;
       sizes?: string;
@@ -169,25 +167,30 @@ const useAnimationLoop = (
         lastTimestampRef.current = timestamp;
       }
 
-      const deltaTime =
-        Math.max(0, timestamp - lastTimestampRef.current) / 1000;
+      const deltaTime = (timestamp - lastTimestampRef.current) / 1000;
       lastTimestampRef.current = timestamp;
 
+      // Use a simpler smoothing or direct target for better performance
       const target =
         isHovered && hoverSpeed !== undefined ? hoverSpeed : targetVelocity;
 
-      const easingFactor =
-        1 - Math.exp(-deltaTime / ANIMATION_CONFIG.SMOOTH_TAU);
-      velocityRef.current += (target - velocityRef.current) * easingFactor;
+      // Direct velocity for constant speed, smoothing only for hover transitions
+      if (isHovered) {
+        const easingFactor = 1 - Math.exp(-deltaTime / 0.1);
+        velocityRef.current += (target - velocityRef.current) * easingFactor;
+      } else {
+        velocityRef.current = target;
+      }
 
       if (seqSize > 0) {
-        let nextOffset = offsetRef.current + velocityRef.current * deltaTime;
-        nextOffset = ((nextOffset % seqSize) + seqSize) % seqSize;
-        offsetRef.current = nextOffset;
+        offsetRef.current += velocityRef.current * deltaTime;
+        // Keep offset within bounds to avoid large numbers
+        if (offsetRef.current >= seqSize) offsetRef.current -= seqSize;
+        if (offsetRef.current < 0) offsetRef.current += seqSize;
 
         const transformValue = isVertical
-          ? `translate3d(0, ${-offsetRef.current}px, 0)`
-          : `translate3d(${-offsetRef.current}px, 0, 0)`;
+          ? `translate3d(0, ${-offsetRef.current.toFixed(2)}px, 0)`
+          : `translate3d(${-offsetRef.current.toFixed(2)}px, 0, 0)`;
         track.style.transform = transformValue;
       }
 
@@ -407,25 +410,6 @@ export const LogoLoop = React.memo<LogoLoopProps>(
           ? ((item as any).ariaLabel ?? (item as any).title)
           : ((item as any).alt ?? (item as any).title);
 
-        const inner = (item as any).href ? (
-          <a
-            className={cx(
-              "inline-flex items-center no-underline rounded",
-              "transition-opacity duration-200 ease-linear",
-              "hover:opacity-80",
-              "focus-visible:outline focus-visible:outline-current focus-visible:outline-offset-2",
-            )}
-            href={(item as any).href}
-            aria-label={itemAriaLabel || "logo link"}
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            {content}
-          </a>
-        ) : (
-          content
-        );
-
         return (
           <li
             className={cx(
@@ -437,8 +421,9 @@ export const LogoLoop = React.memo<LogoLoopProps>(
             )}
             key={key}
             role="listitem"
+            aria-label={itemAriaLabel}
           >
-            {inner}
+            {content}
           </li>
         );
       },

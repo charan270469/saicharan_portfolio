@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background-color: #0a0a0a;
+  margin: 0;
+}
+
 * {
   font-family: 'Inter', sans-serif;
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgb(201,138,94);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(254,221,177);stop-opacity:1" /></linearGradient></defs><circle cx="24" cy="24" r="9" fill="url(%23grad)" /><circle cx="24" cy="24" r="6" fill="none" stroke="url(%23grad)" stroke-width="1.5" opacity="0.6"/></svg>') 24 24, auto;
