@@ -58,6 +58,7 @@ export const VisualDesigner = (): JSX.Element => {
   const portfolioSectionRef = useRef<HTMLDivElement>(null);
   const experienceSectionRef = useRef<HTMLDivElement>(null);
   const contactSectionRef = useRef<HTMLDivElement>(null);
+  const homeSectionRef = useRef<HTMLDivElement>(null);
   const mainContainerRef = useRef<HTMLDivElement>(null);
   const isInitialMountRef = useRef(true);
 
@@ -225,6 +226,17 @@ export const VisualDesigner = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
+    // After the initial mount, set isInitialMountRef to false
+    // This prevents entry animations from re-triggering on every section change
+    // We use a longer timeout (3s) to ensure initial animations (2s) complete
+    // even if re-renders occur (e.g., from hover events)
+    const timer = setTimeout(() => {
+      isInitialMountRef.current = false;
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     // Prevent scroll when modals are open
     if (showAboutMe || showProjectDetail || enlargedArchImage) {
       document.body.style.overflow = "hidden";
@@ -286,7 +298,7 @@ export const VisualDesigner = (): JSX.Element => {
 
   const handleNavClick = (page: string) => {
     if (page === "home") {
-      mainContainerRef.current?.scrollIntoView({ behavior: "smooth" });
+      homeSectionRef.current?.scrollIntoView({ behavior: "smooth" });
     } else if (page === "aboutme") {
       setShowAboutMe(true);
     } else if (page === "projects") {
@@ -454,7 +466,9 @@ export const VisualDesigner = (): JSX.Element => {
       const contactPos = getSectionPos(contactSectionRef);
 
       // Determine which section is currently in view (based on center of viewport)
-      if (viewportCenter < portfolioPos) {
+      if (scrollPosition < 50) {
+        setActivePage("home");
+      } else if (viewportCenter < portfolioPos) {
         setActivePage("home");
       } else if (viewportCenter < experiencePos) {
         setActivePage("projects");
@@ -501,1046 +515,1072 @@ export const VisualDesigner = (): JSX.Element => {
           height: 0;
         }
       `}</style>
-      {/* 1440×810 design canvas, scaled to fit */}
+      {/* Container to handle the scaled height in layout flow */}
       <div
+        ref={homeSectionRef}
         style={{
-          width: DESIGN_W,
-          height: DESIGN_H,
-          transform: `scale(${scale})`,
-          transformOrigin: "top center",
-          position: "relative",
-          flexShrink: 0,
-          marginTop: "0px",
-          marginBottom: "40px",
+          width: "100%",
+          height: DESIGN_H * scale,
+          display: "flex",
+          justifyContent: "center",
+          overflow: "visible",
+          marginBottom: "60px",
         }}
       >
-        {/* Full-bleed background */}
         <div
           style={{
-            position: "absolute",
-            inset: 0,
-            background: "rgba(30,29,28,1)",
-          }}
-        />
-
-        {/* ── Main rounded card ── */}
-        <div
-          style={{
-            position: "absolute",
-            top: 65,
-            left: -40,
-            width: 1520,
-            height: 736,
-            display:
-              showAboutMe || activePage === "projects" ? "none" : "block",
+            width: DESIGN_W,
+            height: DESIGN_H,
+            transform: `scale(${scale})`,
+            transformOrigin: "top center",
+            position: "relative",
+            flexShrink: 0,
           }}
         >
-          <BorderGlow
-            backgroundColor="rgba(30,29,28,1)"
-            borderRadius={24}
-            glowColor="40 80 80"
-            glowRadius={40}
-            glowIntensity={0.7}
-            edgeSensitivity={30}
-            coneSpread={25}
-            colors={["#C5956E", "#8A7361", "#1A1A1A"]}
-            fillOpacity={0.5}
-            className="border-glow-wrapper"
-          >
-            {/* "Design that speaks" — top-right inside card */}
-            <p
-              className={
-                isInitialMountRef.current ? "animate-slide-in-right" : ""
-              }
-              style={{
-                position: "absolute",
-                top: 98,
-                right: 50,
-                width: 150,
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 300,
-                color: "#d1d4db",
-                fontSize: 15.5,
-                textAlign: "right",
-                lineHeight: "24px",
-                margin: 0,
-              }}
-            >
-              Code that thinks.
-              <br />
-              Systems that scale.
-            </p>
-
-            {/* Giant PORTFOLIO text — inside card, two lines */}
-            <div
-              className={
-                isInitialMountRef.current ? "animate-slide-in-top" : ""
-              }
-              style={{
-                position: "absolute",
-                top: 210,
-                left: 30,
-                width: 1450,
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 900,
-                fontSize: 250,
-                textAlign: "center",
-                letterSpacing: "-2px",
-                lineHeight: "0.9",
-                background:
-                  "linear-gradient(128deg, rgba(201,138,94,1) 0%, rgba(254,221,177,1) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                opacity: 0.85,
-                userSelect: "none",
-              }}
-            >
-              PORTFOLIO
-            </div>
-
-            {/* ── Bottom-left: social links + bio  ── */}
-            {/* Positioned using original coords: page y=614, card starts y=37 → card-relative y=577 */}
-            <div
-              className={
-                isInitialMountRef.current ? "animate-slide-in-left" : ""
-              }
-              style={{
-                position: "absolute",
-                top: 570,
-                left: 52,
-                display: "flex",
-                flexDirection: "column",
-                gap: 16,
-                cursor: "pointer",
-              }}
-            >
-              {/* Social links row */}
-              <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
-                <a
-                  href="https://github.com/charan270469"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    textDecoration: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  <img
-                    src={githubIcon}
-                    alt="GitHub"
-                    style={{ width: 18, height: 18 }}
-                  />
-                  <span
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontWeight: 500,
-                      color: "#e4e7eb",
-                      fontSize: 16,
-                      whiteSpace: "nowrap",
-                      cursor: "pointer",
-                    }}
-                  >
-                    charan270469
-                  </span>
-                </a>
-
-                <a
-                  href="https://www.linkedin.com/in/sai-charan-77071b281/"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    textDecoration: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  <img
-                    src={linkedinIcon}
-                    alt="LinkedIn"
-                    style={{ width: 18, height: 18 }}
-                  />
-                  <span
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontWeight: 500,
-                      color: "#e4e7eb",
-                      fontSize: 16,
-                      whiteSpace: "nowrap",
-                      cursor: "pointer",
-                    }}
-                  >
-                    saicharan
-                  </span>
-                </a>
-              </div>
-
-              {/* Bio paragraph */}
-              <p
-                style={{
-                  width: 387,
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: 300,
-                  color: "#d1d4db",
-                  fontSize: 13,
-                  lineHeight: "20px",
-                  margin: 0,
-                }}
-              >
-                Between data and intelligence lies the space where I build. From
-                engineering LLM pipelines to architecting agentic systems, my
-                work revolves around precision, scalability, and real-world
-                impact. Through every project, I help ideas evolve into systems
-                that think, adapt, and deliver with purpose.
-              </p>
-            </div>
-
-            {/* ── Bottom-right: DEVELOPER & DESIGNER ── */}
-            {/* Original: page y=640, card y=37 → card-relative y=603, height=100 → ends at 703, well inside 736 */}
-            <div
-              className={
-                isInitialMountRef.current ? "animate-slide-in-right" : ""
-              }
-              style={{
-                position: "absolute",
-                top: 610,
-                right: 50,
-                width: 363,
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 800,
-                color: "#d2b48b",
-                fontSize: 48.1,
-                textAlign: "right",
-                letterSpacing: "2.4px",
-                lineHeight: "48px",
-              }}
-            >
-              DEVELOPER &amp; DESIGNER
-            </div>
-          </BorderGlow>
-        </div>
-
-        {/* ── Name + tagline (overlapping card top-left) ── */}
-        <div
-          className={isInitialMountRef.current ? "animate-slide-in-left" : ""}
-          style={{
-            position: "absolute",
-            top: 172,
-            left: 12,
-            display: "flex",
-            flexDirection: "column",
-            gap: 4,
-          }}
-        >
+          {/* Full-bleed background */}
           <div
             style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 800,
-              color: "#d2b48b",
-              fontSize: 24.3,
-              letterSpacing: "0.6px",
-              lineHeight: "32px",
-              whiteSpace: "nowrap",
-            }}
-          >
-            SAI CHARAN
-          </div>
-          <div
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 300,
-              color: "#d1d4db",
-              fontSize: 16.1,
-              lineHeight: "24px",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Detach &amp; do it...
-          </div>
-        </div>
-
-        {/* ── Navigation bar ── */}
-        <header
-          style={{
-            position: "fixed",
-            top: 50,
-            left: 0,
-            width: "100%",
-            zIndex: 50,
-            display: showAboutMe || showProjectDetail ? "none" : "flex",
-            justifyContent: "center",
-            paddingLeft: "1rem",
-            paddingRight: "1rem",
-            paddingTop: "1rem",
-          }}
-        >
-          <nav
-            style={{
-              borderRadius: 9999,
-              marginTop: "1.5rem",
-              marginLeft: "auto",
-              marginRight: "auto",
-              backgroundColor: "rgba(19, 19, 19, 0.8)",
-              backdropFilter: "blur(20px)",
-              display: "flex",
-              alignItems: "center",
-              gap: "2rem",
-              paddingLeft: "2rem",
-              paddingRight: "2rem",
-              paddingTop: "0.75rem",
-              paddingBottom: "0.75rem",
-              boxShadow: "0px 20px 50px rgba(0,0,0,0.3)",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1.5rem",
-              }}
-              className="md:flex"
-            >
-              {renderNavLink("Home", "home")}
-              {renderNavLink("AboutMe", "aboutme")}
-              {renderNavLink("Projects", "projects")}
-              {renderNavLink("Experience", "experience")}
-            </div>
-            <button
-              onClick={() => {
-                contactSectionRef.current?.scrollIntoView({
-                  behavior: "smooth",
-                });
-              }}
-              style={{
-                backgroundColor: "#c5956e",
-                color: "#0a0a0a",
-                paddingLeft: "1.5rem",
-                paddingRight: "1.5rem",
-                paddingTop: "0.5rem",
-                paddingBottom: "0.5rem",
-                borderRadius: 9999,
-                fontWeight: 700,
-                fontSize: "0.75rem",
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                transition: "transform 0.3s",
-                border: "none",
-              }}
-              onMouseEnter={(e) => {
-                (e.target as HTMLButtonElement).style.transform = "scale(1.05)";
-              }}
-              onMouseLeave={(e) => {
-                (e.target as HTMLButtonElement).style.transform = "scale(1)";
-              }}
-              onMouseDown={(e) => {
-                (e.target as HTMLButtonElement).style.transform = "scale(0.95)";
-              }}
-              onMouseUp={(e) => {
-                (e.target as HTMLButtonElement).style.transform = "scale(1.05)";
-              }}
-            >
-              Connect
-            </button>
-          </nav>
-        </header>
-
-        {/* ── Portrait photo (centered on card, anchored to bottom) ── */}
-        <div
-          className={isInitialMountRef.current ? "animate-slide-in-bottom" : ""}
-          style={{
-            position: "absolute",
-            top: 47,
-            left: 20,
-            width: 1400,
-            height: 753,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-end",
-            pointerEvents: "none",
-          }}
-          onMouseEnter={handleImageHover}
-          onMouseMove={handleImageMove}
-          onMouseLeave={handleImageLeave}
-        >
-          <img
-            src={prBwlow1}
-            alt="Sai Charan"
-            onClick={handleImageClick}
-            style={{
-              maxWidth: 650,
-              maxHeight: 770,
-              width: "auto",
-              height: "auto",
-              objectFit: "contain",
-              pointerEvents: "auto",
-              cursor: "pointer",
-              transition: "transform 0.3s",
+              position: "absolute",
+              inset: 0,
+              background: "rgba(30,29,28,1)",
             }}
           />
 
-          {/* About Me Tooltip */}
-          {imageHovered && (
-            <div
-              style={{
-                position: "fixed",
-                left: tooltipPos.x + 5,
-                top: tooltipPos.y - 35,
-                backgroundColor: "rgba(254, 221, 177, 0.15)",
-                border: "1px solid rgba(254, 221, 177, 0.3)",
-                borderRadius: 8,
-                padding: "6px 12px",
-                fontSize: 12,
-                fontWeight: 500,
-                color: "#feddb1",
-                fontFamily: "'Inter', sans-serif",
-                whiteSpace: "nowrap",
-                pointerEvents: "none",
-                zIndex: 1000,
-              }}
+          {/* ── Main rounded card ── */}
+          <div
+            style={{
+              position: "absolute",
+              top: 50,
+              left: -40,
+              width: 1520,
+              height: 736,
+              display: showAboutMe ? "none" : "block",
+            }}
+          >
+            <BorderGlow
+              backgroundColor="rgba(30,29,28,1)"
+              borderRadius={24}
+              glowColor="40 80 80"
+              glowRadius={40}
+              glowIntensity={0.7}
+              edgeSensitivity={30}
+              coneSpread={25}
+              colors={["#C5956E", "#8A7361", "#1A1A1A"]}
+              fillOpacity={0.5}
+              className="border-glow-wrapper"
             >
-              Click to know me
-            </div>
-          )}
-        </div>
-
-        {/* ── About Me Modal Section (Portal) ── */}
-        {showAboutMe &&
-          ReactDOM.createPortal(
-            <div
-              style={{
-                position: "fixed",
-                inset: 0,
-                backgroundColor: "rgba(0, 0, 0, 0.7)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 9999,
-                cursor: "pointer",
-                backdropFilter: "blur(8px)",
-              }}
-              onClick={() => setShowAboutMe(false)}
-            >
-              <div
-                className="animate-modal-slide-in"
-                onClick={(e) => e.stopPropagation()}
+              {/* "Design that speaks" — top-right inside card */}
+              <p
+                className={
+                  isInitialMountRef.current ? "animate-slide-in-right" : ""
+                }
                 style={{
-                  position: "relative",
-                  width: "100%",
-                  maxWidth: 1600,
-                  maxHeight: "90vh",
-                  backgroundColor: "rgba(30, 29, 28, 1)",
-                  borderRadius: 24,
-                  cursor: "default",
-                  overflow: "hidden",
+                  position: "absolute",
+                  top: 120,
+                  right: 52,
+                  width: 150,
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 300,
+                  color: "#d1d4db",
+                  fontSize: 15.5,
+                  textAlign: "right",
+                  lineHeight: "24px",
+                  margin: 0,
                 }}
               >
-                <BorderGlow
-                  backgroundColor="rgba(30,29,28,1)"
-                  borderRadius={24}
-                  glowColor="40 80 80"
-                  glowRadius={40}
-                  glowIntensity={0.7}
-                  edgeSensitivity={30}
-                  coneSpread={25}
-                  colors={["#C5956E", "#8A7361", "#1A1A1A"]}
-                  fillOpacity={0.5}
-                  className="border-glow-wrapper"
-                >
-                  {/* Close button */}
-                  <button
-                    onClick={() => setShowAboutMe(false)}
+                Code that thinks.
+                <br />
+                Systems that scale.
+              </p>
+
+              {/* Giant PORTFOLIO text — inside card, two lines */}
+              <div
+                className={
+                  isInitialMountRef.current ? "animate-slide-in-top" : ""
+                }
+                style={{
+                  position: "absolute",
+                  top: 210,
+                  left: 30,
+                  width: 1450,
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 900,
+                  fontSize: 250,
+                  textAlign: "center",
+                  letterSpacing: "-2px",
+                  lineHeight: "0.9",
+                  background:
+                    "linear-gradient(128deg, rgba(201,138,94,1) 0%, rgba(254,221,177,1) 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  opacity: 0.85,
+                  userSelect: "none",
+                }}
+              >
+                PORTFOLIO
+              </div>
+
+              {/* ── Bottom-left: social links + bio  ── */}
+              {/* Positioned using original coords: page y=614, card starts y=37 → card-relative y=577 */}
+              <div
+                className={
+                  isInitialMountRef.current ? "animate-slide-in-left" : ""
+                }
+                style={{
+                  position: "absolute",
+                  top: 570,
+                  left: 52,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 16,
+                  cursor: "pointer",
+                }}
+              >
+                {/* Social links row */}
+                <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
+                  <a
+                    href="https://github.com/charan270469"
+                    rel="noopener noreferrer"
+                    target="_blank"
                     style={{
-                      position: "absolute",
-                      top: 20,
-                      right: 20,
-                      width: 40,
-                      height: 40,
-                      borderRadius: "50%",
-                      backgroundColor: "rgba(197, 149, 110, 0.2)",
-                      border: "1px solid rgba(197, 149, 110, 0.4)",
-                      color: "#d2b48b",
-                      fontSize: 24,
-                      cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
-                      transition: "all 0.3s",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(197, 149, 110, 0.4)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(197, 149, 110, 0.2)";
+                      gap: 8,
+                      textDecoration: "none",
+                      cursor: "pointer",
                     }}
                   >
-                    ✕
-                  </button>
-
-                  {/* Content */}
-                  <div
-                    style={{
-                      padding: "60px 60px",
-                      height: "100%",
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1.2fr",
-                      gap: 40,
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    {/* Left: Text Content */}
-                    <div>
-                      <h1
-                        style={{
-                          fontFamily: "'Inter', sans-serif",
-                          fontWeight: 900,
-                          fontSize: 48,
-                          color: "#d2b48b",
-                          margin: "0 0 20px 0",
-                          letterSpacing: "-1px",
-                        }}
-                      >
-                        About Me
-                      </h1>
-
-                      <p
-                        style={{
-                          fontFamily: "'Inter', sans-serif",
-                          fontWeight: 300,
-                          fontSize: 14,
-                          color: "#d1d4db",
-                          lineHeight: "24px",
-                          margin: "0 0 16px 0",
-                          maxWidth: "600px",
-                        }}
-                      >
-                        I'm a B.Tech student in Data Science & AI (2023–2027) at
-                        IFHE Hyderabad, with hands-on production experience
-                        building AI/ML systems, LLM pipelines, and full-stack
-                        applications well before graduation. At Viswam.AI, I
-                        contributed to India's first large-scale Telugu LLM —
-                        working directly on data collection, corpus refinement,
-                        and supervised fine-tuning inside a Linux-based NLP
-                        pipeline. At Mindenious Edutech, I completed an Azure
-                        Cloud Computing program spanning compute, networking,
-                        storage, and security, delivering a capstone cloud
-                        deployment. Earlier, at Seponty, I translated user
-                        requirements into interaction patterns for a production
-                        chatbot application as a UI/UX intern.
-                      </p>
-
-                      <p
-                        style={{
-                          fontFamily: "'Inter', sans-serif",
-                          fontWeight: 300,
-                          fontSize: 14,
-                          color: "#d1d4db",
-                          lineHeight: "24px",
-                          margin: "0 0 16px 0",
-                          maxWidth: "600px",
-                        }}
-                      >
-                        My project work reflects the same production-first
-                        mindset — a credit risk platform with an ensemble ML
-                        model and SHAP explainability, a multi-agent workflow
-                        engine with self-healing failure recovery, an AI-powered
-                        retail system with blockchain-signed receipts, and a
-                        medical assistant with full RAG grounding on personal
-                        health records. Beyond the work, I'm a national
-                        hackathon finalist, a Top 20 team pick at TechSprint
-                        nationwide, and part of the team that built a real-time
-                        voice-first AI banking assistant at the Agentathon 2025
-                        Guinness World Record event.
-                      </p>
-
-                      <p
-                        style={{
-                          fontFamily: "'Inter', sans-serif",
-                          fontWeight: 300,
-                          fontSize: 14,
-                          color: "#d1d4db",
-                          lineHeight: "24px",
-                          margin: 0,
-                          maxWidth: "600px",
-                        }}
-                      >
-                        When I'm not coding, you'll find me exploring emerging
-                        technologies, contributing to open-source projects, or
-                        crafting pixel-perfect interfaces. I believe in the
-                        power of clean code, thoughtful design, and solving
-                        complex problems with elegant solutions. I'm actively
-                        seeking internships and full-time roles in AI/ML
-                        engineering, LLM development, and full-stack AI — and
-                        ready to contribute from day one.
-                      </p>
-                    </div>
-
-                    {/* Right: Skill Boxes Bento Grid */}
-                    <div
+                    <img
+                      src={githubIcon}
+                      alt="GitHub"
+                      style={{ width: 18, height: 18 }}
+                    />
+                    <span
                       style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gridTemplateRows: "auto auto auto",
-                        gap: 16,
-                        width: "100%",
-                        height: "100%",
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 500,
+                        color: "#e4e7eb",
+                        fontSize: 16,
+                        whiteSpace: "nowrap",
+                        cursor: "pointer",
                       }}
                     >
-                      {/* AI & Intelligence - Large Box (spans 2 rows, 1 col) */}
-                      <div
-                        style={{
-                          gridColumn: "1 / 3",
-                          gridRow: "1 / 2",
-                          backgroundColor: "rgba(70, 70, 70, 0.4)",
-                          borderRadius: 12,
-                          padding: 20,
-                          border: "1px solid rgba(255, 255, 255, 0.1)",
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 20,
-                        }}
-                      >
-                        <h3
+                      charan270469
+                    </span>
+                  </a>
+
+                  <a
+                    href="https://www.linkedin.com/in/sai-charan-77071b281/"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      textDecoration: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <img
+                      src={linkedinIcon}
+                      alt="LinkedIn"
+                      style={{ width: 18, height: 18 }}
+                    />
+                    <span
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 500,
+                        color: "#e4e7eb",
+                        fontSize: 16,
+                        whiteSpace: "nowrap",
+                        cursor: "pointer",
+                      }}
+                    >
+                      saicharan
+                    </span>
+                  </a>
+                </div>
+
+                {/* Bio paragraph */}
+                <p
+                  style={{
+                    width: 387,
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 300,
+                    color: "#d1d4db",
+                    fontSize: 13,
+                    lineHeight: "20px",
+                    margin: 0,
+                  }}
+                >
+                  Between data and intelligence lies the space where I build.
+                  From engineering LLM pipelines to architecting agentic
+                  systems, my work revolves around precision, scalability, and
+                  real-world impact. Through every project, I help ideas evolve
+                  into systems that think, adapt, and deliver with purpose.
+                </p>
+              </div>
+
+              {/* ── Bottom-right: DEVELOPER & DESIGNER ── */}
+              {/* Original: page y=640, card y=37 → card-relative y=603, height=100 → ends at 703, well inside 736 */}
+              <div
+                className={
+                  isInitialMountRef.current ? "animate-slide-in-right" : ""
+                }
+                style={{
+                  position: "absolute",
+                  top: 610,
+                  right: 50,
+                  width: 363,
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 800,
+                  color: "#d2b48b",
+                  fontSize: 48.1,
+                  textAlign: "right",
+                  letterSpacing: "2.4px",
+                  lineHeight: "48px",
+                }}
+              >
+                DEVELOPER &amp; DESIGNER
+              </div>
+            </BorderGlow>
+          </div>
+
+          {/* ── Name + tagline (overlapping card top-left) ── */}
+          <div
+            className={isInitialMountRef.current ? "animate-slide-in-left" : ""}
+            style={{
+              position: "absolute",
+              top: 172,
+              left: 12,
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 800,
+                color: "#d2b48b",
+                fontSize: 24.3,
+                letterSpacing: "0.6px",
+                lineHeight: "32px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              SAI CHARAN
+            </div>
+            <div
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 300,
+                color: "#d1d4db",
+                fontSize: 16.1,
+                lineHeight: "24px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Detach &amp; do it...
+            </div>
+          </div>
+
+          {/* ── Navigation bar ── */}
+          <header
+            className={isInitialMountRef.current ? "animate-slide-in-top" : ""}
+            style={{
+              position: "fixed",
+              top: 40,
+              left: 0,
+              width: "100%",
+              zIndex: 50,
+              display: showAboutMe || showProjectDetail ? "none" : "flex",
+              justifyContent: "center",
+              paddingLeft: "1rem",
+              paddingRight: "1rem",
+              paddingTop: "1rem",
+            }}
+          >
+            <nav
+              style={{
+                borderRadius: 9999,
+                marginTop: "1.5rem",
+                marginLeft: "auto",
+                marginRight: "auto",
+                backgroundColor: "rgba(19, 19, 19, 0.8)",
+                backdropFilter: "blur(20px)",
+                display: "flex",
+                alignItems: "center",
+                gap: "2rem",
+                paddingLeft: "2rem",
+                paddingRight: "2rem",
+                paddingTop: "0.75rem",
+                paddingBottom: "0.75rem",
+                boxShadow: "0px 20px 50px rgba(0,0,0,0.3)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "1.5rem",
+                }}
+                className="md:flex"
+              >
+                {renderNavLink("Home", "home")}
+                {renderNavLink("AboutMe", "aboutme")}
+                {renderNavLink("Projects", "projects")}
+                {renderNavLink("Experience", "experience")}
+              </div>
+              <button
+                onClick={() => {
+                  contactSectionRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                  });
+                }}
+                style={{
+                  backgroundColor: "#c5956e",
+                  color: "#0a0a0a",
+                  paddingLeft: "1.5rem",
+                  paddingRight: "1.5rem",
+                  paddingTop: "0.5rem",
+                  paddingBottom: "0.5rem",
+                  borderRadius: 9999,
+                  fontWeight: 700,
+                  fontSize: "0.75rem",
+                  letterSpacing: "0.05em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  transition: "transform 0.3s",
+                  border: "none",
+                }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLButtonElement).style.transform =
+                    "scale(1.05)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLButtonElement).style.transform = "scale(1)";
+                }}
+                onMouseDown={(e) => {
+                  (e.target as HTMLButtonElement).style.transform =
+                    "scale(0.95)";
+                }}
+                onMouseUp={(e) => {
+                  (e.target as HTMLButtonElement).style.transform =
+                    "scale(1.05)";
+                }}
+              >
+                Connect
+              </button>
+            </nav>
+          </header>
+
+          {/* ── Portrait photo (centered on card, anchored to bottom) ── */}
+          <div
+            className={
+              isInitialMountRef.current ? "animate-slide-in-bottom" : ""
+            }
+            style={{
+              position: "absolute",
+              top: 32,
+              left: 20,
+              width: 1400,
+              height: 753,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-end",
+              pointerEvents: "none",
+            }}
+            onMouseEnter={handleImageHover}
+            onMouseMove={handleImageMove}
+            onMouseLeave={handleImageLeave}
+          >
+            <img
+              src={prBwlow1}
+              alt="Sai Charan"
+              onClick={handleImageClick}
+              style={{
+                maxWidth: 650,
+                maxHeight: 770,
+                width: "auto",
+                height: "auto",
+                objectFit: "contain",
+                pointerEvents: "auto",
+                cursor: "pointer",
+                transition: "transform 0.3s",
+              }}
+            />
+
+            {/* About Me Tooltip */}
+            {imageHovered && (
+              <div
+                style={{
+                  position: "fixed",
+                  left: tooltipPos.x + 5,
+                  top: tooltipPos.y - 35,
+                  backgroundColor: "#feddb1",
+                  border: "1px solid #C5956E",
+                  borderRadius: 8,
+                  padding: "6px 12px",
+                  fontSize: "clamp(0.7rem, 0.9vw, 0.75rem)",
+                  fontWeight: 500,
+                  color: "#000000ff",
+                  fontFamily: "'Inter', sans-serif",
+                  whiteSpace: "nowrap",
+                  pointerEvents: "none",
+                  zIndex: 1000,
+                }}
+              >
+                Click to know me
+              </div>
+            )}
+          </div>
+
+          {/* ── About Me Modal Section (Portal) ── */}
+          {showAboutMe &&
+            ReactDOM.createPortal(
+              <div
+                style={{
+                  position: "fixed",
+                  inset: 0,
+                  backgroundColor: "rgba(0, 0, 0, 0.7)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 9999,
+                  cursor: "pointer",
+                  backdropFilter: "blur(8px)",
+                }}
+                onClick={() => setShowAboutMe(false)}
+              >
+                <div
+                  className="animate-modal-slide-in"
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    position: "relative",
+                    width: "95%",
+                    maxWidth: 1600,
+                    maxHeight: "95vh",
+                    backgroundColor: "rgba(30, 29, 28, 1)",
+                    borderRadius: 24,
+                    cursor: "default",
+                    overflow: "hidden",
+                  }}
+                >
+                  <BorderGlow
+                    backgroundColor="rgba(30,29,28,1)"
+                    borderRadius={24}
+                    glowColor="40 80 80"
+                    glowRadius={40}
+                    glowIntensity={0.7}
+                    edgeSensitivity={30}
+                    coneSpread={25}
+                    colors={["#C5956E", "#8A7361", "#1A1A1A"]}
+                    fillOpacity={0.5}
+                    className="border-glow-wrapper"
+                  >
+                    {/* Close button */}
+                    <button
+                      onClick={() => setShowAboutMe(false)}
+                      style={{
+                        position: "absolute",
+                        top: 20,
+                        right: 20,
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        backgroundColor: "rgba(197, 149, 110, 0.2)",
+                        border: "1px solid rgba(197, 149, 110, 0.4)",
+                        color: "#d2b48b",
+                        fontSize: "clamp(1.25rem, 2vw, 1.5rem)",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        transition: "all 0.3s",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          "rgba(197, 149, 110, 0.4)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          "rgba(197, 149, 110, 0.2)";
+                      }}
+                    >
+                      ✕
+                    </button>
+
+                    {/* Content */}
+                    <div
+                      style={{
+                        padding: "40px 60px 20px 60px",
+                        height: "100%",
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1.2fr",
+                        gap: 40,
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      {/* Left: Text Content */}
+                      <div>
+                        <h1
                           style={{
                             fontFamily: "'Inter', sans-serif",
-                            fontWeight: 800,
-                            fontSize: 18,
-                            color: "#d1d4db",
-                            margin: 0,
-                            letterSpacing: "-0.3px",
+                            fontWeight: 900,
+                            fontSize: "clamp(1.75rem, 4vw, 3rem)",
+                            color: "#d2b48b",
+                            margin: "0 0 16px 0",
+                            letterSpacing: "-1px",
                           }}
                         >
-                          AI & Intelligence
-                        </h3>
+                          About Me
+                        </h1>
+
                         <p
                           style={{
                             fontFamily: "'Inter', sans-serif",
                             fontWeight: 300,
-                            fontSize: 14,
-                            color: "#feddb1",
+                            fontSize: "11px",
+                            color: "#d1d4db",
                             lineHeight: "18px",
-                            margin: 0,
+                            margin: "0 0 12px 0",
+                            maxWidth: "600px",
                           }}
                         >
-                          Building LLM pipelines, agentic workflows, and
-                          retrieval systems for production.
+                          I'm a B.Tech student in Data Science & AI (2023–2027)
+                          at IFHE Hyderabad, with hands-on production experience
+                          building AI/ML systems, LLM pipelines, and full-stack
+                          applications well before graduation. At Viswam.AI, I
+                          contributed to India's first large-scale Telugu LLM —
+                          working directly on data collection, corpus
+                          refinement, and supervised fine-tuning inside a
+                          Linux-based NLP pipeline. At Mindenious Edutech, I
+                          completed an Azure Cloud Computing program spanning
+                          compute, networking, storage, and security, delivering
+                          a capstone cloud deployment. Earlier, at Seponty, I
+                          translated user requirements into interaction patterns
+                          for a production chatbot application as a UI/UX
+                          intern.
                         </p>
+
+                        <p
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontWeight: 300,
+                            fontSize: "11px",
+                            color: "#d1d4db",
+                            lineHeight: "18px",
+                            margin: "0 0 12px 0",
+                            maxWidth: "600px",
+                          }}
+                        >
+                          My project work reflects the same production-first
+                          mindset — a credit risk platform with an ensemble ML
+                          model and SHAP explainability, a multi-agent workflow
+                          engine with self-healing failure recovery, an
+                          AI-powered retail system with blockchain-signed
+                          receipts, and a medical assistant with full RAG
+                          grounding on personal health records. Beyond the work,
+                          I'm a national hackathon finalist, a Top 20 team pick
+                          at TechSprint nationwide, and part of the team that
+                          built a real-time voice-first AI banking assistant at
+                          the Agentathon 2025 Guinness World Record event.
+                        </p>
+
+                        <p
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontWeight: 300,
+                            fontSize: "11px",
+                            color: "#d1d4db",
+                            lineHeight: "18px",
+                            margin: 0,
+                            maxWidth: "600px",
+                          }}
+                        >
+                          When I'm not coding, you'll find me exploring emerging
+                          technologies, contributing to open-source projects, or
+                          crafting pixel-perfect interfaces. I believe in the
+                          power of clean code, thoughtful design, and solving
+                          complex problems with elegant solutions. I'm actively
+                          seeking internships and full-time roles in AI/ML
+                          engineering, LLM development, and full-stack AI — and
+                          ready to contribute from day one.
+                        </p>
+                      </div>
+
+                      {/* Right: Skill Boxes Bento Grid */}
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gridTemplateRows: "auto auto auto",
+                          gap: 8,
+                          width: "100%",
+                          height: "100%",
+                        }}
+                      >
+                        {/* AI & Intelligence - Large Box (spans 2 rows, 1 col) */}
                         <div
                           style={{
+                            gridColumn: "1 / 3",
+                            gridRow: "1 / 2",
+                            backgroundColor: "rgba(70, 70, 70, 0.4)",
+                            borderRadius: 12,
+                            padding: 16,
+                            border: "1px solid rgba(255, 255, 255, 0.1)",
                             display: "flex",
                             flexDirection: "column",
                             gap: 8,
                           }}
                         >
-                          <div>
-                            <p
-                              style={{
-                                fontFamily: "'Inter', sans-serif",
-                                fontWeight: 600,
-                                fontSize: 16,
-                                color: "#d2b48b",
-                                margin: "0 0 6px 0",
-                                textTransform: "uppercase",
-                              }}
-                            >
-                              LLMs & RAG
-                            </p>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                gap: 6,
-                              }}
-                            >
-                              {[
-                                "LangChain",
-                                "Hugging Face",
-                                "FAISS",
-                                "DeepFace",
-                                "OpenCV",
-                              ].map((skill) => (
-                                <span
-                                  key={skill}
-                                  style={{
-                                    fontSize: 14,
-                                    color: "#d1d4db",
-                                    backgroundColor: "rgba(210, 180, 139, 0.1)",
-                                    padding: "4px 8px",
-                                    borderRadius: 4,
-                                    fontFamily: "'Inter', sans-serif",
-                                    fontWeight: 500,
-                                  }}
-                                >
-                                  {skill}
-                                </span>
-                              ))}
+                          <h3
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 800,
+                              fontSize: "14px",
+                              color: "#d1d4db",
+                              margin: 0,
+                              letterSpacing: "-0.3px",
+                            }}
+                          >
+                            AI & Intelligence
+                          </h3>
+                          <p
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 300,
+                              fontSize: "11px",
+                              color: "#feddb1",
+                              lineHeight: "16px",
+                              margin: 0,
+                            }}
+                          >
+                            Building LLM pipelines, agentic workflows, and
+                            retrieval systems for production.
+                          </p>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: 6,
+                            }}
+                          >
+                            <div>
+                              <p
+                                style={{
+                                  fontFamily: "'Inter', sans-serif",
+                                  fontWeight: 600,
+                                  fontSize: "12px",
+                                  color: "#d2b48b",
+                                  margin: "0 0 4px 0",
+                                  textTransform: "uppercase",
+                                }}
+                              >
+                                LLMs & RAG
+                              </p>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 6,
+                                }}
+                              >
+                                {[
+                                  "LangChain",
+                                  "Hugging Face",
+                                  "FAISS",
+                                  "DeepFace",
+                                  "OpenCV",
+                                ].map((skill) => (
+                                  <span
+                                    key={skill}
+                                    style={{
+                                      fontSize: "10px",
+                                      color: "#d1d4db",
+                                      backgroundColor:
+                                        "rgba(210, 180, 139, 0.1)",
+                                      padding: "2px 6px",
+                                      borderRadius: 4,
+                                      fontFamily: "'Inter', sans-serif",
+                                      fontWeight: 500,
+                                    }}
+                                  >
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Full-Stack - Small Box */}
+                        <div
+                          style={{
+                            gridColumn: "1 / 2",
+                            gridRow: "2 / 3",
+                            backgroundColor: "rgba(70, 70, 70, 0.4)",
+                            borderRadius: 12,
+                            padding: 12,
+                            border: "1px solid rgba(255, 255, 255, 0.1)",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 8,
+                          }}
+                        >
+                          <h3
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 800,
+                              fontSize: "14px",
+                              color: "#d1d4db",
+                              margin: 0,
+                              letterSpacing: "-0.2px",
+                            }}
+                          >
+                            Full-Stack
+                          </h3>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              gap: 6,
+                            }}
+                          >
+                            {[
+                              "FastAPI",
+                              "React",
+                              "Node.js",
+                              "Tailwind",
+                              "WebSocket",
+                              "Ethers.js",
+                            ].map((skill) => (
+                              <span
+                                key={skill}
+                                style={{
+                                  fontSize: "10px",
+                                  color: "#d1d4db",
+                                  backgroundColor: "rgba(210, 180, 139, 0.1)",
+                                  padding: "2px 6px",
+                                  borderRadius: 3,
+                                  fontFamily: "'Inter', sans-serif",
+                                  fontWeight: 500,
+                                }}
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Infra & Tools - Small Box */}
+                        <div
+                          style={{
+                            gridColumn: "2 / 3",
+                            gridRow: "2 / 3",
+                            backgroundColor: "rgba(70, 70, 70, 0.4)",
+                            borderRadius: 12,
+                            padding: 12,
+                            border: "1px solid rgba(255, 255, 255, 0.1)",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 8,
+                          }}
+                        >
+                          <h3
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 800,
+                              fontSize: "14px",
+                              color: "#d1d4db",
+                              margin: 0,
+                              letterSpacing: "-0.2px",
+                            }}
+                          >
+                            Infra & Tools
+                          </h3>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              gap: 6,
+                            }}
+                          >
+                            {[
+                              "Linux",
+                              "Azure",
+                              "Groq",
+                              "n8n",
+                              "Cursor",
+                              "Git",
+                            ].map((skill) => (
+                              <span
+                                key={skill}
+                                style={{
+                                  fontSize: "10px",
+                                  color: "#d1d4db",
+                                  backgroundColor: "rgba(210, 180, 139, 0.1)",
+                                  padding: "2px 6px",
+                                  borderRadius: 3,
+                                  fontFamily: "'Inter', sans-serif",
+                                  fontWeight: 500,
+                                }}
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Data & ML - Large Square Box */}
+                        <div
+                          style={{
+                            gridColumn: "1 / 3",
+                            gridRow: "3 / 4",
+                            backgroundColor: "rgba(210, 180, 139, 0.12)",
+                            borderRadius: 12,
+                            padding: 16,
+                            border: "1px solid rgba(210, 180, 139, 0.3)",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 8,
+                          }}
+                        >
+                          <h3
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 800,
+                              fontSize: "14px",
+                              color: "#d2b48b",
+                              margin: 0,
+                              letterSpacing: "-0.3px",
+                            }}
+                          >
+                            Data & ML
+                          </h3>
+                          <p
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 300,
+                              fontSize: "11px",
+                              color: "#ffffff",
+                              lineHeight: "16px",
+                              margin: 0,
+                            }}
+                          >
+                            Crafting ensemble models, explainable predictions,
+                            and end-to-end ML pipelines.
+                          </p>
+                          <div
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns: "1fr 1fr",
+                              gap: 8,
+                            }}
+                          >
+                            <div>
+                              <p
+                                style={{
+                                  fontFamily: "'Inter', sans-serif",
+                                  fontWeight: 700,
+                                  fontSize: "11px",
+                                  color: "#d2b48b",
+                                  margin: "0 0 4px 0",
+                                  textTransform: "uppercase",
+                                }}
+                              >
+                                Algorithms
+                              </p>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 6,
+                                }}
+                              >
+                                {[
+                                  "XGBoost",
+                                  "LightGBM",
+                                  "CatBoost",
+                                  "Scikit-learn",
+                                ].map((skill) => (
+                                  <span
+                                    key={skill}
+                                    style={{
+                                      fontSize: "10px",
+                                      color: "#1a1a1a",
+                                      backgroundColor: "#d2b48b",
+                                      padding: "2px 6px",
+                                      borderRadius: 3,
+                                      fontFamily: "'Inter', sans-serif",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <p
+                                style={{
+                                  fontFamily: "'Inter', sans-serif",
+                                  fontWeight: 700,
+                                  fontSize: "11px",
+                                  color: "#d2b48b",
+                                  margin: "0 0 4px 0",
+                                  textTransform: "uppercase",
+                                }}
+                              >
+                                Explainability
+                              </p>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 6,
+                                }}
+                              >
+                                {["SHAP", "Neural Nets"].map((skill) => (
+                                  <span
+                                    key={skill}
+                                    style={{
+                                      fontSize: "10px",
+                                      color: "#1a1a1a",
+                                      backgroundColor: "#d2b48b",
+                                      padding: "2px 6px",
+                                      borderRadius: 3,
+                                      fontFamily: "'Inter', sans-serif",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <p
+                                style={{
+                                  fontFamily: "'Inter', sans-serif",
+                                  fontWeight: 700,
+                                  fontSize: "11px",
+                                  color: "#d2b48b",
+                                  margin: "0 0 4px 0",
+                                  textTransform: "uppercase",
+                                }}
+                              >
+                                Languages & Data
+                              </p>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 6,
+                                }}
+                              >
+                                {[
+                                  "Python",
+                                  "MySQL",
+                                  "MongoDB",
+                                  "C/C++",
+                                  "Java",
+                                ].map((skill) => (
+                                  <span
+                                    key={skill}
+                                    style={{
+                                      fontSize: "10px",
+                                      color: "#1a1a1a",
+                                      backgroundColor: "#d2b48b",
+                                      padding: "2px 6px",
+                                      borderRadius: 3,
+                                      fontFamily: "'Inter', sans-serif",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Full-Stack - Small Box */}
-                      <div
-                        style={{
-                          gridColumn: "1 / 2",
-                          gridRow: "2 / 3",
-                          backgroundColor: "rgba(70, 70, 70, 0.4)",
-                          borderRadius: 12,
-                          padding: 16,
-                          border: "1px solid rgba(255, 255, 255, 0.1)",
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 10,
-                        }}
-                      >
-                        <h3
-                          style={{
-                            fontFamily: "'Inter', sans-serif",
-                            fontWeight: 800,
-                            fontSize: 16,
-                            color: "#d1d4db",
-                            margin: 0,
-                            letterSpacing: "-0.2px",
-                          }}
-                        >
-                          Full-Stack
-                        </h3>
-                        <div
-                          style={{ display: "flex", flexWrap: "wrap", gap: 6 }}
-                        >
-                          {[
-                            "FastAPI",
-                            "React",
-                            "Node.js",
-                            "Tailwind",
-                            "WebSocket",
-                            "Ethers.js",
-                          ].map((skill) => (
-                            <span
-                              key={skill}
-                              style={{
-                                fontSize: 14,
-                                color: "#d1d4db",
-                                backgroundColor: "rgba(210, 180, 139, 0.1)",
-                                padding: "3px 7px",
-                                borderRadius: 3,
-                                fontFamily: "'Inter', sans-serif",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Infra & Tools - Small Box */}
-                      <div
-                        style={{
-                          gridColumn: "2 / 3",
-                          gridRow: "2 / 3",
-                          backgroundColor: "rgba(70, 70, 70, 0.4)",
-                          borderRadius: 12,
-                          padding: 16,
-                          border: "1px solid rgba(255, 255, 255, 0.1)",
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 10,
-                        }}
-                      >
-                        <h3
-                          style={{
-                            fontFamily: "'Inter', sans-serif",
-                            fontWeight: 800,
-                            fontSize: 16,
-                            color: "#d1d4db",
-                            margin: 0,
-                            letterSpacing: "-0.2px",
-                          }}
-                        >
-                          Infra & Tools
-                        </h3>
-                        <div
-                          style={{ display: "flex", flexWrap: "wrap", gap: 6 }}
-                        >
-                          {[
-                            "Linux",
-                            "Azure",
-                            "Groq",
-                            "n8n",
-                            "Cursor",
-                            "Git",
-                          ].map((skill) => (
-                            <span
-                              key={skill}
-                              style={{
-                                fontSize: 14,
-                                color: "#d1d4db",
-                                backgroundColor: "rgba(210, 180, 139, 0.1)",
-                                padding: "3px 7px",
-                                borderRadius: 3,
-                                fontFamily: "'Inter', sans-serif",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Data & ML - Large Square Box */}
+                      {/* Tech Stack Logo Loop - Full Width Below */}
                       <div
                         style={{
                           gridColumn: "1 / 3",
-                          gridRow: "3 / 4",
-                          backgroundColor: "rgba(210, 180, 139, 0.12)",
-                          borderRadius: 12,
-                          padding: 20,
-                          border: "1px solid rgba(210, 180, 139, 0.3)",
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 14,
+                          width: "100%",
+                          height: 80,
+                          marginTop: 5,
+                          marginBottom: 0,
                         }}
                       >
-                        <h3
+                        <LogoLoop
+                          logos={techLogos}
+                          speed={80}
+                          direction="left"
+                          logoHeight={40}
+                          gap={30}
+                          pauseOnHover
+                          scaleOnHover
+                          fadeOut
+                          fadeOutColor="rgba(30, 29, 28, 1)"
+                          ariaLabel="Technology stack"
                           style={{
-                            fontFamily: "'Inter', sans-serif",
-                            fontWeight: 800,
-                            fontSize: 16,
-                            color: "#d2b48b",
-                            margin: 0,
-                            letterSpacing: "-0.3px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            filter:
+                              "brightness(0) saturate(100%) invert(88%) sepia(23%) saturate(85%) hue-rotate(4deg)",
                           }}
-                        >
-                          Data & ML
-                        </h3>
-                        <p
-                          style={{
-                            fontFamily: "'Inter', sans-serif",
-                            fontWeight: 300,
-                            fontSize: 14,
-                            color: "#ffffff",
-                            lineHeight: "18px",
-                            margin: 0,
-                          }}
-                        >
-                          Crafting ensemble models, explainable predictions, and
-                          end-to-end ML pipelines.
-                        </p>
-                        <div
-                          style={{
-                            display: "grid",
-                            gridTemplateColumns: "1fr 1fr",
-                            gap: 12,
-                          }}
-                        >
-                          <div>
-                            <p
-                              style={{
-                                fontFamily: "'Inter', sans-serif",
-                                fontWeight: 700,
-                                fontSize: 14,
-                                color: "#d2b48b",
-                                margin: "0 0 6px 0",
-                                textTransform: "uppercase",
-                              }}
-                            >
-                              Algorithms
-                            </p>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                gap: 6,
-                              }}
-                            >
-                              {[
-                                "XGBoost",
-                                "LightGBM",
-                                "CatBoost",
-                                "Scikit-learn",
-                              ].map((skill) => (
-                                <span
-                                  key={skill}
-                                  style={{
-                                    fontSize: 12,
-                                    color: "#1a1a1a",
-                                    backgroundColor: "#d2b48b",
-                                    padding: "3px 7px",
-                                    borderRadius: 3,
-                                    fontFamily: "'Inter', sans-serif",
-                                    fontWeight: 600,
-                                  }}
-                                >
-                                  {skill}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                          <div>
-                            <p
-                              style={{
-                                fontFamily: "'Inter', sans-serif",
-                                fontWeight: 700,
-                                fontSize: 14,
-                                color: "#d2b48b",
-                                margin: "0 0 6px 0",
-                                textTransform: "uppercase",
-                              }}
-                            >
-                              Explainability
-                            </p>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                gap: 6,
-                              }}
-                            >
-                              {["SHAP", "Neural Nets"].map((skill) => (
-                                <span
-                                  key={skill}
-                                  style={{
-                                    fontSize: 12,
-                                    color: "#1a1a1a",
-                                    backgroundColor: "#d2b48b",
-                                    padding: "3px 7px",
-                                    borderRadius: 3,
-                                    fontFamily: "'Inter', sans-serif",
-                                    fontWeight: 600,
-                                  }}
-                                >
-                                  {skill}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                          <div>
-                            <p
-                              style={{
-                                fontFamily: "'Inter', sans-serif",
-                                fontWeight: 700,
-                                fontSize: 14,
-                                color: "#d2b48b",
-                                margin: "0 0 6px 0",
-                                textTransform: "uppercase",
-                              }}
-                            >
-                              Languages & Data
-                            </p>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                gap: 6,
-                              }}
-                            >
-                              {[
-                                "Python",
-                                "MySQL",
-                                "MongoDB",
-                                "C/C++",
-                                "Java",
-                              ].map((skill) => (
-                                <span
-                                  key={skill}
-                                  style={{
-                                    fontSize: 12,
-                                    color: "#1a1a1a",
-                                    backgroundColor: "#d2b48b",
-                                    padding: "3px 7px",
-                                    borderRadius: 3,
-                                    fontFamily: "'Inter', sans-serif",
-                                    fontWeight: 600,
-                                  }}
-                                >
-                                  {skill}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
+                        />
                       </div>
                     </div>
+                  </BorderGlow>
+                </div>
+              </div>,
+              document.body,
+            )}
 
-                    {/* Tech Stack Logo Loop - Full Width Below */}
-                    <div
-                      style={{
-                        gridColumn: "1 / 3",
-                        width: "100%",
-                        height: 120,
-                        marginTop: 40,
-                        marginBottom: 0,
-                      }}
-                    >
-                      <LogoLoop
-                        logos={techLogos}
-                        speed={80}
-                        direction="left"
-                        logoHeight={50}
-                        gap={40}
-                        pauseOnHover
-                        scaleOnHover
-                        fadeOut
-                        fadeOutColor="rgba(30, 29, 28, 1)"
-                        ariaLabel="Technology stack"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          filter:
-                            "brightness(0) saturate(100%) invert(88%) sepia(23%) saturate(85%) hue-rotate(4deg)",
-                        }}
-                      />
-                    </div>
-                  </div>
-                </BorderGlow>
-              </div>
-            </div>,
-            document.body,
-          )}
-
-        {/* ── Project Detail Modal (Portal) ── */}
-        {showProjectDetail &&
-          selectedProject &&
-          ReactDOM.createPortal(
-            <div
-              style={{
-                position: "fixed",
-                inset: 0,
-                backgroundColor: "rgba(0, 0, 0, 0.7)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 9999,
-                cursor: "pointer",
-                backdropFilter: "blur(8px)",
-              }}
-              onClick={() => setShowProjectDetail(false)}
-            >
+          {/* ── Project Detail Modal (Portal) ── */}
+          {showProjectDetail &&
+            selectedProject &&
+            ReactDOM.createPortal(
               <div
-                onClick={(e) => e.stopPropagation()}
                 style={{
-                  position: "relative",
-                  width: "98%",
-                  maxWidth: 1440,
-                  maxHeight: "90vh",
-                  backgroundColor: "rgba(30, 29, 28, 1)",
-                  borderRadius: 24,
-                  cursor: "default",
-                  animation: "slideUp 0.3s ease-out",
+                  position: "fixed",
+                  inset: 0,
+                  backgroundColor: "rgba(0, 0, 0, 0.7)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 9999,
+                  cursor: "pointer",
+                  backdropFilter: "blur(8px)",
                 }}
+                onClick={() => setShowProjectDetail(false)}
               >
-                <style>
-                  {`
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    position: "relative",
+                    width: "98%",
+                    maxWidth: 1440,
+                    height: "90vh",
+                    backgroundColor: "rgba(30, 29, 28, 1)",
+                    borderRadius: 24,
+                    cursor: "default",
+                    animation: "slideUp 0.3s ease-out",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <style>
+                    {`
                   @keyframes slideUp {
                     from {
                       transform: translateY(60px);
@@ -1561,399 +1601,402 @@ export const VisualDesigner = (): JSX.Element => {
                     scrollbar-width: none;
                   }
                 `}
-                </style>
-                <BorderGlow
-                  backgroundColor="rgba(30,29,28,1)"
-                  borderRadius={24}
-                  glowColor="40 80 80"
-                  glowRadius={40}
-                  glowIntensity={0.7}
-                  edgeSensitivity={30}
-                  coneSpread={25}
-                  colors={["#C5956E", "#8A7361", "#1A1A1A"]}
-                  fillOpacity={0.5}
-                  className="border-glow-wrapper"
+                  </style>
+                  <BorderGlow
+                    backgroundColor="rgba(30,29,28,1)"
+                    borderRadius={24}
+                    glowColor="40 80 80"
+                    glowRadius={40}
+                    glowIntensity={0.7}
+                    edgeSensitivity={30}
+                    coneSpread={25}
+                    colors={["#C5956E", "#8A7361", "#1A1A1A"]}
+                    fillOpacity={0.5}
+                    className="border-glow-wrapper"
+                  >
+                    {/* Close button */}
+                    <button
+                      onClick={() => setShowProjectDetail(false)}
+                      style={{
+                        position: "absolute",
+                        top: 20,
+                        right: 20,
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        backgroundColor: "rgba(197, 149, 110, 0.2)",
+                        border: "1px solid rgba(197, 149, 110, 0.4)",
+                        color: "#d2b48b",
+                        fontSize: 24,
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        transition: "all 0.3s",
+                        zIndex: 10,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          "rgba(197, 149, 110, 0.4)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          "rgba(197, 149, 110, 0.2)";
+                      }}
+                    >
+                      ✕
+                    </button>
+
+                    {/* Content */}
+                    <div
+                      className="project-modal-content"
+                      style={{
+                        padding: "50px 60px 60px 60px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "flex-start",
+                        overflowY: "auto",
+                        maxHeight: "calc(100vh - 100px)",
+                        gap: "0px",
+                      }}
+                    >
+                      {projects
+                        .filter((p) => p.id === selectedProject)
+                        .map((project) => (
+                          <div key={project.id}>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                gap: 24,
+                                marginBottom: "20px",
+                              }}
+                            >
+                              <h1
+                                style={{
+                                  fontFamily: "'Inter', sans-serif",
+                                  fontWeight: 900,
+                                  fontSize: "clamp(1.75rem, 4vw, 3rem)",
+                                  color: "#d2b48b",
+                                  margin: 0,
+                                  letterSpacing: "-1px",
+                                }}
+                              >
+                                {project.name}
+                              </h1>
+                              <a
+                                href={project.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                  width: "16%",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  gap: 10,
+                                  background:
+                                    "linear-gradient(135deg, #c98a5e 0%, #feddb1 100%)",
+                                  border: "none",
+                                  color: "#000000",
+                                  padding: "16px 10px",
+                                  borderRadius: 100,
+                                  fontSize: "clamp(0.875rem, 1vw, 1rem)",
+                                  fontWeight: 1000,
+                                  fontFamily: "'Inter', sans-serif",
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  transition: "all 0.3s",
+                                  whiteSpace: "nowrap",
+                                  textTransform: "uppercase",
+                                  letterSpacing: "0.05em",
+                                }}
+                                onMouseEnter={(e) => {
+                                  const el = e.currentTarget as HTMLElement;
+                                  el.style.transform = "translateY(-2px)";
+                                  el.style.boxShadow =
+                                    "0 8px 24px rgba(201, 138, 94, 0.3)";
+                                }}
+                                onMouseLeave={(e) => {
+                                  const el = e.currentTarget as HTMLElement;
+                                  el.style.transform = "translateY(0)";
+                                  el.style.boxShadow = "none";
+                                }}
+                              >
+                                View Project
+                                <svg
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 22 22"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <polyline points="7 17 17 7"></polyline>
+                                  <line x1="17" y1="7" x2="17" y2="17"></line>
+                                  <line x1="17" y1="7" x2="7" y2="7"></line>
+                                </svg>
+                              </a>
+                            </div>
+
+                            {/* Tech Stack */}
+                            <div
+                              style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: 8,
+                                marginBottom: 24,
+                              }}
+                            >
+                              {project.tech.map((tech, idx) => (
+                                <span
+                                  key={idx}
+                                  style={{
+                                    backgroundColor: "rgba(201, 138, 94, 0.2)",
+                                    border: "1px solid rgba(201, 138, 94, 0.5)",
+                                    color: "#d2b48b",
+                                    fontSize: "clamp(0.75rem, 0.9vw, 0.875rem)",
+                                    fontWeight: 500,
+                                    padding: "6px 14px",
+                                    borderRadius: 12,
+                                    fontFamily: "'Inter', sans-serif",
+                                  }}
+                                >
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
+
+                            <p
+                              style={{
+                                fontFamily: "'Inter', sans-serif",
+                                fontWeight: 300,
+                                fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
+                                color: "#d1d4db",
+                                lineHeight: "28px",
+                                margin: "0 0 20px 0",
+                                maxWidth: "1000px",
+                              }}
+                            >
+                              {project.description}
+                            </p>
+
+                            <h2
+                              style={{
+                                fontFamily: "'Inter', sans-serif",
+                                fontWeight: 700,
+                                fontSize: "clamp(1.1rem, 1.5vw, 1.25rem)",
+                                color: "#d2b48b",
+                                margin: "24px 0 12px 0",
+                              }}
+                            >
+                              Case Study
+                            </h2>
+
+                            <p
+                              style={{
+                                fontFamily: "'Inter', sans-serif",
+                                fontWeight: 300,
+                                fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
+                                color: "#d1d4db",
+                                lineHeight: "28px",
+                                margin: "0 0 30px 0",
+                                maxWidth: "1650px",
+                                whiteSpace: "pre-line",
+                              }}
+                            >
+                              {project.caseStudy}
+                            </p>
+
+                            {project.architectureImage && (
+                              <div
+                                style={{
+                                  marginTop: "30px",
+                                  marginBottom: "30px",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  position: "relative",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    position: "relative",
+                                    display: "inline-block",
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    const img = e.currentTarget.querySelector(
+                                      "img",
+                                    ) as HTMLImageElement;
+                                    const tooltip =
+                                      e.currentTarget.querySelector(
+                                        "[data-arch-tooltip]",
+                                      ) as HTMLElement;
+                                    if (img) {
+                                      img.style.transform = "scale(1.02)";
+                                      img.style.boxShadow =
+                                        "0 8px 32px rgba(201, 138, 94, 0.3)";
+                                    }
+                                    if (tooltip) {
+                                      tooltip.style.opacity = "1";
+                                      tooltip.style.pointerEvents = "auto";
+                                    }
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    const img = e.currentTarget.querySelector(
+                                      "img",
+                                    ) as HTMLImageElement;
+                                    const tooltip =
+                                      e.currentTarget.querySelector(
+                                        "[data-arch-tooltip]",
+                                      ) as HTMLElement;
+                                    if (img) {
+                                      img.style.transform = "scale(1)";
+                                      img.style.boxShadow = "none";
+                                    }
+                                    if (tooltip) {
+                                      tooltip.style.opacity = "0";
+                                      tooltip.style.pointerEvents = "none";
+                                    }
+                                  }}
+                                >
+                                  <img
+                                    src={project.architectureImage}
+                                    alt={`${project.name} Architecture`}
+                                    onClick={() =>
+                                      setEnlargedArchImage(
+                                        project.architectureImage,
+                                      )
+                                    }
+                                    style={{
+                                      maxWidth: "2000px",
+                                      height: "auto",
+                                      maxHeight: "2000px",
+                                      borderRadius: "12px",
+                                      border:
+                                        "1px solid rgba(201, 138, 94, 0.3)",
+                                      cursor: "pointer",
+                                      transition: "all 0.3s ease",
+                                    }}
+                                  />
+                                  {/* Tooltip */}
+                                  <div
+                                    data-arch-tooltip
+                                    style={{
+                                      position: "absolute",
+                                      top: "50%",
+                                      left: "50%",
+                                      transform: "translate(-50%, -50%)",
+                                      backgroundColor: "rgba(0, 0, 0, 0.8)",
+                                      color: "#feddb1",
+                                      padding: "10px 16px",
+                                      borderRadius: "8px",
+                                      fontSize: "14px",
+                                      fontWeight: 600,
+                                      whiteSpace: "nowrap",
+                                      opacity: 0,
+                                      pointerEvents: "none",
+                                      transition: "opacity 0.3s ease",
+                                      zIndex: 100,
+                                      fontFamily: "'Inter', sans-serif",
+                                    }}
+                                  >
+                                    View Enlarged Image
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                    </div>
+                  </BorderGlow>
+                </div>
+              </div>,
+              document.body,
+            )}
+
+          {/* ── Enlarged Architecture Image Modal (Portal) ── */}
+          {enlargedArchImage &&
+            ReactDOM.createPortal(
+              <div
+                style={{
+                  position: "fixed",
+                  inset: 0,
+                  backgroundColor: "rgba(0, 0, 0, 0.85)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 10000,
+                  cursor: "pointer",
+                  backdropFilter: "blur(12px)",
+                }}
+                onClick={() => setEnlargedArchImage(null)}
+              >
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "75vw",
+                    height: "75vh",
+                    cursor: "default",
+                  }}
                 >
                   {/* Close button */}
                   <button
-                    onClick={() => setShowProjectDetail(false)}
+                    onClick={() => setEnlargedArchImage(null)}
                     style={{
                       position: "absolute",
                       top: 20,
                       right: 20,
-                      width: 40,
-                      height: 40,
+                      width: 48,
+                      height: 48,
                       borderRadius: "50%",
-                      backgroundColor: "rgba(197, 149, 110, 0.2)",
-                      border: "1px solid rgba(197, 149, 110, 0.4)",
+                      backgroundColor: "rgba(197, 149, 110, 0.25)",
+                      border: "2px solid rgba(197, 149, 110, 0.5)",
                       color: "#d2b48b",
-                      fontSize: 24,
+                      fontSize: 28,
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      transition: "all 0.3s",
-                      zIndex: 10,
+                      transition: "all 0.3s ease",
+                      zIndex: 10001,
+                      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor =
                         "rgba(197, 149, 110, 0.4)";
+                      e.currentTarget.style.transform = "scale(1.1)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.backgroundColor =
-                        "rgba(197, 149, 110, 0.2)";
+                        "rgba(197, 149, 110, 0.25)";
+                      e.currentTarget.style.transform = "scale(1)";
                     }}
                   >
                     ✕
                   </button>
 
-                  {/* Content */}
-                  <div
-                    className="project-modal-content"
+                  {/* Enlarged image */}
+                  <img
+                    src={enlargedArchImage}
+                    alt="Architecture Diagram"
                     style={{
-                      padding: "50px 60px 60px 60px",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "flex-start",
-                      overflowY: "auto",
-                      maxHeight: "calc(100vh - 100px)",
-                      gap: "0px",
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      borderRadius: "16px",
+                      boxShadow: "0 20px 60px rgba(0, 0, 0, 0.5)",
+                      animation: "zoomIn 0.3s ease-out",
                     }}
-                  >
-                    {projects
-                      .filter((p) => p.id === selectedProject)
-                      .map((project) => (
-                        <div key={project.id}>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              gap: 24,
-                              marginBottom: "20px",
-                            }}
-                          >
-                            <h1
-                              style={{
-                                fontFamily: "'Inter', sans-serif",
-                                fontWeight: 900,
-                                fontSize: 48,
-                                color: "#d2b48b",
-                                margin: 0,
-                                letterSpacing: "-1px",
-                              }}
-                            >
-                              {project.name}
-                            </h1>
-                            <a
-                              href={project.github}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{
-                                width: "16%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: 10,
-                                background:
-                                  "linear-gradient(135deg, #c98a5e 0%, #feddb1 100%)",
-                                border: "none",
-                                color: "#000000",
-                                padding: "16px 10px",
-                                borderRadius: 100,
-                                fontSize: 16,
-                                fontWeight: 1000,
-                                fontFamily: "'Inter', sans-serif",
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                transition: "all 0.3s",
-                                whiteSpace: "nowrap",
-                                textTransform: "uppercase",
-                                letterSpacing: "0.05em",
-                              }}
-                              onMouseEnter={(e) => {
-                                const el = e.currentTarget as HTMLElement;
-                                el.style.transform = "translateY(-2px)";
-                                el.style.boxShadow =
-                                  "0 8px 24px rgba(201, 138, 94, 0.3)";
-                              }}
-                              onMouseLeave={(e) => {
-                                const el = e.currentTarget as HTMLElement;
-                                el.style.transform = "translateY(0)";
-                                el.style.boxShadow = "none";
-                              }}
-                            >
-                              View Project
-                              <svg
-                                width="20"
-                                height="20"
-                                viewBox="0 0 22 22"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <polyline points="7 17 17 7"></polyline>
-                                <line x1="17" y1="7" x2="17" y2="17"></line>
-                                <line x1="17" y1="7" x2="7" y2="7"></line>
-                              </svg>
-                            </a>
-                          </div>
-
-                          {/* Tech Stack */}
-                          <div
-                            style={{
-                              display: "flex",
-                              flexWrap: "wrap",
-                              gap: 8,
-                              marginBottom: 24,
-                            }}
-                          >
-                            {project.tech.map((tech, idx) => (
-                              <span
-                                key={idx}
-                                style={{
-                                  backgroundColor: "rgba(201, 138, 94, 0.2)",
-                                  border: "1px solid rgba(201, 138, 94, 0.5)",
-                                  color: "#d2b48b",
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  padding: "6px 14px",
-                                  borderRadius: 12,
-                                  fontFamily: "'Inter', sans-serif",
-                                }}
-                              >
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-
-                          <p
-                            style={{
-                              fontFamily: "'Inter', sans-serif",
-                              fontWeight: 300,
-                              fontSize: 16,
-                              color: "#d1d4db",
-                              lineHeight: "28px",
-                              margin: "0 0 20px 0",
-                              maxWidth: "1000px",
-                            }}
-                          >
-                            {project.description}
-                          </p>
-
-                          <h2
-                            style={{
-                              fontFamily: "'Inter', sans-serif",
-                              fontWeight: 700,
-                              fontSize: 20,
-                              color: "#d2b48b",
-                              margin: "24px 0 12px 0",
-                            }}
-                          >
-                            Case Study
-                          </h2>
-
-                          <p
-                            style={{
-                              fontFamily: "'Inter', sans-serif",
-                              fontWeight: 300,
-                              fontSize: 16,
-                              color: "#d1d4db",
-                              lineHeight: "28px",
-                              margin: "0 0 30px 0",
-                              maxWidth: "1650px",
-                              whiteSpace: "pre-line",
-                            }}
-                          >
-                            {project.caseStudy}
-                          </p>
-
-                          {project.architectureImage && (
-                            <div
-                              style={{
-                                marginTop: "30px",
-                                marginBottom: "30px",
-                                display: "flex",
-                                justifyContent: "center",
-                                position: "relative",
-                              }}
-                            >
-                              <div
-                                style={{
-                                  position: "relative",
-                                  display: "inline-block",
-                                }}
-                                onMouseEnter={(e) => {
-                                  const img = e.currentTarget.querySelector(
-                                    "img",
-                                  ) as HTMLImageElement;
-                                  const tooltip = e.currentTarget.querySelector(
-                                    "[data-arch-tooltip]",
-                                  ) as HTMLElement;
-                                  if (img) {
-                                    img.style.transform = "scale(1.02)";
-                                    img.style.boxShadow =
-                                      "0 8px 32px rgba(201, 138, 94, 0.3)";
-                                  }
-                                  if (tooltip) {
-                                    tooltip.style.opacity = "1";
-                                    tooltip.style.pointerEvents = "auto";
-                                  }
-                                }}
-                                onMouseLeave={(e) => {
-                                  const img = e.currentTarget.querySelector(
-                                    "img",
-                                  ) as HTMLImageElement;
-                                  const tooltip = e.currentTarget.querySelector(
-                                    "[data-arch-tooltip]",
-                                  ) as HTMLElement;
-                                  if (img) {
-                                    img.style.transform = "scale(1)";
-                                    img.style.boxShadow = "none";
-                                  }
-                                  if (tooltip) {
-                                    tooltip.style.opacity = "0";
-                                    tooltip.style.pointerEvents = "none";
-                                  }
-                                }}
-                              >
-                                <img
-                                  src={project.architectureImage}
-                                  alt={`${project.name} Architecture`}
-                                  onClick={() =>
-                                    setEnlargedArchImage(
-                                      project.architectureImage,
-                                    )
-                                  }
-                                  style={{
-                                    maxWidth: "2000px",
-                                    height: "auto",
-                                    maxHeight: "2000px",
-                                    borderRadius: "12px",
-                                    border: "1px solid rgba(201, 138, 94, 0.3)",
-                                    cursor: "pointer",
-                                    transition: "all 0.3s ease",
-                                  }}
-                                />
-                                {/* Tooltip */}
-                                <div
-                                  data-arch-tooltip
-                                  style={{
-                                    position: "absolute",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    backgroundColor: "rgba(0, 0, 0, 0.8)",
-                                    color: "#feddb1",
-                                    padding: "10px 16px",
-                                    borderRadius: "8px",
-                                    fontSize: "14px",
-                                    fontWeight: 600,
-                                    whiteSpace: "nowrap",
-                                    opacity: 0,
-                                    pointerEvents: "none",
-                                    transition: "opacity 0.3s ease",
-                                    zIndex: 100,
-                                    fontFamily: "'Inter', sans-serif",
-                                  }}
-                                >
-                                  View Enlarged Image
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                  </div>
-                </BorderGlow>
-              </div>
-            </div>,
-            document.body,
-          )}
-
-        {/* ── Enlarged Architecture Image Modal (Portal) ── */}
-        {enlargedArchImage &&
-          ReactDOM.createPortal(
-            <div
-              style={{
-                position: "fixed",
-                inset: 0,
-                backgroundColor: "rgba(0, 0, 0, 0.85)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 10000,
-                cursor: "pointer",
-                backdropFilter: "blur(12px)",
-              }}
-              onClick={() => setEnlargedArchImage(null)}
-            >
-              <div
-                onClick={(e) => e.stopPropagation()}
-                style={{
-                  position: "relative",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "75vw",
-                  height: "75vh",
-                  cursor: "default",
-                }}
-              >
-                {/* Close button */}
-                <button
-                  onClick={() => setEnlargedArchImage(null)}
-                  style={{
-                    position: "absolute",
-                    top: 20,
-                    right: 20,
-                    width: 48,
-                    height: 48,
-                    borderRadius: "50%",
-                    backgroundColor: "rgba(197, 149, 110, 0.25)",
-                    border: "2px solid rgba(197, 149, 110, 0.5)",
-                    color: "#d2b48b",
-                    fontSize: 28,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    transition: "all 0.3s ease",
-                    zIndex: 10001,
-                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor =
-                      "rgba(197, 149, 110, 0.4)";
-                    e.currentTarget.style.transform = "scale(1.1)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor =
-                      "rgba(197, 149, 110, 0.25)";
-                    e.currentTarget.style.transform = "scale(1)";
-                  }}
-                >
-                  ✕
-                </button>
-
-                {/* Enlarged image */}
-                <img
-                  src={enlargedArchImage}
-                  alt="Architecture Diagram"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                    borderRadius: "16px",
-                    boxShadow: "0 20px 60px rgba(0, 0, 0, 0.5)",
-                    animation: "zoomIn 0.3s ease-out",
-                  }}
-                />
-              </div>
-              <style>
-                {`
+                  />
+                </div>
+                <style>
+                  {`
                   @keyframes zoomIn {
                     from {
                       opacity: 0;
@@ -1965,10 +2008,11 @@ export const VisualDesigner = (): JSX.Element => {
                     }
                   }
                 `}
-              </style>
-            </div>,
-            document.body,
-          )}
+                </style>
+              </div>,
+              document.body,
+            )}
+        </div>
       </div>
 
       {/* ── Scrollable Portfolio Section ── */}
@@ -1977,7 +2021,7 @@ export const VisualDesigner = (): JSX.Element => {
         style={{
           width: "100%",
           minHeight: "auto",
-          padding: "80px 40px 60px 40px",
+          padding: "60px 40px",
           backgroundColor: "rgba(30, 29, 28, 1)",
           display: "flex",
           flexDirection: "column",
@@ -1990,7 +2034,7 @@ export const VisualDesigner = (): JSX.Element => {
             style={{
               fontFamily: "'Inter', sans-serif",
               fontWeight: 900,
-              fontSize: 56,
+              fontSize: "clamp(2rem, 5vw, 3.5rem)",
               background: "linear-gradient(128deg, #c98a5e 0%, #feddb1 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -2007,7 +2051,7 @@ export const VisualDesigner = (): JSX.Element => {
               fontFamily: "'Inter', sans-serif",
               fontWeight: 300,
               color: "#d1d4db",
-              fontSize: 18,
+              fontSize: "clamp(1rem, 1.5vw, 1.125rem)",
               margin: 0,
             }}
           >
@@ -2020,7 +2064,7 @@ export const VisualDesigner = (): JSX.Element => {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(2, 1fr)",
-            gap: 50,
+            gap: 40,
             justifyContent: "center",
             width: "100%",
             maxWidth: 1440,
@@ -2037,7 +2081,7 @@ export const VisualDesigner = (): JSX.Element => {
               }}
               style={{
                 cursor: "pointer",
-                height: 500,
+                height: 420,
                 width: "100%",
                 position: "relative",
               }}
@@ -2060,7 +2104,7 @@ export const VisualDesigner = (): JSX.Element => {
                 captionText="click for more details"
                 containerHeight="500px"
                 containerWidth="100%"
-                imageHeight="450px"
+                imageHeight="400px"
                 imageWidth="100%"
                 rotateAmplitude={12}
                 scaleOnHover={1.05}
@@ -2102,9 +2146,9 @@ export const VisualDesigner = (): JSX.Element => {
                           style={{
                             fontFamily: "'Inter', sans-serif",
                             fontWeight: 700,
-                            fontSize: 32,
+                            fontSize: "32px",
                             color: "#f0cea0",
-                            margin: "10px 10px 12px 10px",
+                            margin: "6px 10px 8px 6px",
                             letterSpacing: "-0.5px",
                           }}
                         >
@@ -2115,29 +2159,66 @@ export const VisualDesigner = (): JSX.Element => {
                         <div
                           style={{
                             display: "flex",
-                            flexWrap: "wrap",
-                            gap: -10,
+                            flexDirection: "column",
+                            gap: 0,
                           }}
                         >
-                          {(project.displayTech || project.tech).map(
-                            (tech, idx) => (
-                              <span
-                                key={idx}
-                                style={{
-                                  margin: 8,
-                                  backgroundColor: "#d2b48b",
-                                  color: "#000000",
-                                  fontSize: 13,
-                                  fontWeight: 700,
-                                  padding: "6px 14px",
-                                  borderRadius: 8,
-                                  fontFamily: "'Inter', sans-serif",
-                                }}
-                              >
-                                {tech}
-                              </span>
-                            ),
-                          )}
+                          {/* Row 1: First 3 */}
+                          <div
+                            style={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              gap: -10,
+                            }}
+                          >
+                            {(project.displayTech || project.tech)
+                              .slice(0, 4)
+                              .map((tech, idx) => (
+                                <span
+                                  key={idx}
+                                  style={{
+                                    margin: 4,
+                                    backgroundColor: "#d2b48b",
+                                    color: "#000000",
+                                    fontSize: "12px",
+                                    fontWeight: 700,
+                                    padding: "6px 12px",
+                                    borderRadius: 8,
+                                    fontFamily: "'Inter', sans-serif",
+                                  }}
+                                >
+                                  {tech}
+                                </span>
+                              ))}
+                          </div>
+                          {/* Row 2: Remaining techs (up to 4 more) */}
+                          <div
+                            style={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              gap: -10,
+                            }}
+                          >
+                            {(project.displayTech || project.tech)
+                              .slice(4, 7)
+                              .map((tech, idx) => (
+                                <span
+                                  key={idx + 3}
+                                  style={{
+                                    margin: 4,
+                                    backgroundColor: "#d2b48b",
+                                    color: "#000000",
+                                    fontSize: "12px",
+                                    fontWeight: 700,
+                                    padding: "6px 12px",
+                                    borderRadius: 8,
+                                    fontFamily: "'Inter', sans-serif",
+                                  }}
+                                >
+                                  {tech}
+                                </span>
+                              ))}
+                          </div>
                         </div>
                       </div>
 
@@ -2147,7 +2228,7 @@ export const VisualDesigner = (): JSX.Element => {
                           style={{
                             fontFamily: "'Inter', sans-serif",
                             fontWeight: 300,
-                            fontSize: 16,
+                            fontSize: "14px",
                             color: "#ffffff",
                             lineHeight: "20px",
                             margin: 8,
@@ -2175,7 +2256,7 @@ export const VisualDesigner = (): JSX.Element => {
         style={{
           width: "100%",
           minHeight: "auto",
-          padding: "60px 40px 40px 40px",
+          padding: "60px 40px",
           backgroundColor: "rgba(30, 29, 28, 1)",
           display: "flex",
           flexDirection: "column",
@@ -2214,7 +2295,7 @@ export const VisualDesigner = (): JSX.Element => {
               <p
                 style={{
                   fontFamily: "'Inter', sans-serif",
-                  fontSize: 11,
+                  fontSize: "clamp(0.65rem, 0.8vw, 0.75rem)",
                   fontWeight: 600,
                   letterSpacing: "0.15em",
                   textTransform: "uppercase",
@@ -2228,7 +2309,7 @@ export const VisualDesigner = (): JSX.Element => {
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontWeight: 800,
-                  fontSize: 56,
+                  fontSize: "clamp(2rem, 5vw, 3.5rem)",
                   background:
                     "linear-gradient(128deg, #c98a5e 0%, #feddb1 100%)",
                   WebkitBackgroundClip: "text",
@@ -2246,7 +2327,7 @@ export const VisualDesigner = (): JSX.Element => {
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontWeight: 300,
-                  fontSize: 15,
+                  fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
                   color: "#f0efee",
                   lineHeight: "1.8",
                   margin: 0,
@@ -2299,7 +2380,7 @@ export const VisualDesigner = (): JSX.Element => {
                     style={{
                       fontFamily: "'Inter', sans-serif",
                       fontWeight: 800,
-                      fontSize: 24,
+                      fontSize: "clamp(1.25rem, 2vw, 1.5rem)",
                       color: "#c98a5e",
                       margin: 0,
                       letterSpacing: "-0.3px",
@@ -2310,7 +2391,7 @@ export const VisualDesigner = (): JSX.Element => {
                   <span
                     style={{
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 12,
+                      fontSize: "clamp(0.7rem, 0.9vw, 0.75rem)",
                       fontWeight: 600,
                       letterSpacing: "0.1em",
                       textTransform: "uppercase",
@@ -2328,7 +2409,7 @@ export const VisualDesigner = (): JSX.Element => {
                 <p
                   style={{
                     fontFamily: "'Inter', sans-serif",
-                    fontSize: 14,
+                    fontSize: "clamp(0.8rem, 1vw, 0.875rem)",
                     fontWeight: 600,
                     letterSpacing: "0.15em",
                     textTransform: "uppercase",
@@ -2342,7 +2423,7 @@ export const VisualDesigner = (): JSX.Element => {
                   style={{
                     fontFamily: "'Inter', sans-serif",
                     fontWeight: 300,
-                    fontSize: 16,
+                    fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
                     color: "#d1d4db",
                     lineHeight: "1.8",
                     margin: 0,
@@ -2389,7 +2470,7 @@ export const VisualDesigner = (): JSX.Element => {
                     style={{
                       fontFamily: "'Inter', sans-serif",
                       fontWeight: 800,
-                      fontSize: 24,
+                      fontSize: "clamp(1.25rem, 2vw, 1.5rem)",
                       color: "#c98a5e",
                       margin: 0,
                       letterSpacing: "-0.3px",
@@ -2400,7 +2481,7 @@ export const VisualDesigner = (): JSX.Element => {
                   <span
                     style={{
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 12,
+                      fontSize: "clamp(0.7rem, 0.9vw, 0.75rem)",
                       fontWeight: 600,
                       letterSpacing: "0.1em",
                       textTransform: "uppercase",
@@ -2418,7 +2499,7 @@ export const VisualDesigner = (): JSX.Element => {
                 <p
                   style={{
                     fontFamily: "'Inter', sans-serif",
-                    fontSize: 14,
+                    fontSize: "clamp(0.8rem, 1vw, 0.875rem)",
                     fontWeight: 600,
                     letterSpacing: "0.15em",
                     textTransform: "uppercase",
@@ -2432,7 +2513,7 @@ export const VisualDesigner = (): JSX.Element => {
                   style={{
                     fontFamily: "'Inter', sans-serif",
                     fontWeight: 300,
-                    fontSize: 16,
+                    fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
                     color: "#d1d4db",
                     lineHeight: "1.8",
                     margin: 0,
@@ -2478,7 +2559,7 @@ export const VisualDesigner = (): JSX.Element => {
                     style={{
                       fontFamily: "'Inter', sans-serif",
                       fontWeight: 800,
-                      fontSize: 24,
+                      fontSize: "clamp(1.25rem, 2vw, 1.5rem)",
                       color: "#c98a5e",
                       margin: 0,
                       letterSpacing: "-0.3px",
@@ -2489,7 +2570,7 @@ export const VisualDesigner = (): JSX.Element => {
                   <span
                     style={{
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 12,
+                      fontSize: "clamp(0.7rem, 0.9vw, 0.75rem)",
                       fontWeight: 600,
                       letterSpacing: "0.1em",
                       textTransform: "uppercase",
@@ -2507,7 +2588,7 @@ export const VisualDesigner = (): JSX.Element => {
                 <p
                   style={{
                     fontFamily: "'Inter', sans-serif",
-                    fontSize: 14,
+                    fontSize: "clamp(0.8rem, 1vw, 0.875rem)",
                     fontWeight: 600,
                     letterSpacing: "0.15em",
                     textTransform: "uppercase",
@@ -2521,7 +2602,7 @@ export const VisualDesigner = (): JSX.Element => {
                   style={{
                     fontFamily: "'Inter', sans-serif",
                     fontWeight: 300,
-                    fontSize: 16,
+                    fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
                     color: "#d1d4db",
                     lineHeight: "1.8",
                     margin: 0,
@@ -2554,7 +2635,7 @@ export const VisualDesigner = (): JSX.Element => {
         style={{
           width: "100%",
           minHeight: "auto",
-          padding: "60px 40px 80px 40px",
+          padding: "60px 40px",
           backgroundColor: "rgba(30, 29, 28, 1)",
           display: "flex",
           flexDirection: "column",
@@ -2585,7 +2666,7 @@ export const VisualDesigner = (): JSX.Element => {
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontWeight: 800,
-                  fontSize: 56,
+                  fontSize: "50px",
                   background:
                     "linear-gradient(128deg, #c98a5e 0%, #feddb1 100%)",
                   WebkitBackgroundClip: "text",
@@ -2605,7 +2686,7 @@ export const VisualDesigner = (): JSX.Element => {
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontWeight: 400,
-                  fontSize: 16,
+                  fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
                   color: "#a8a29e",
                   margin: "0 0 48px 0",
                   lineHeight: "1.6",
@@ -2635,7 +2716,7 @@ export const VisualDesigner = (): JSX.Element => {
                       whiteSpace: "nowrap",
                       border: "1px solid rgba(197, 149, 110, 0.2)",
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 14,
+                      fontSize: "clamp(0.8rem, 1vw, 0.875rem)",
                       fontWeight: 700,
                       cursor: "pointer",
                       transition: "all 0.3s",
@@ -2688,7 +2769,7 @@ export const VisualDesigner = (): JSX.Element => {
                       whiteSpace: "nowrap",
                       border: "1px solid rgba(197, 149, 110, 0.2)",
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 14,
+                      fontSize: "clamp(0.8rem, 1vw, 0.875rem)",
                       fontWeight: 700,
                       cursor: "pointer",
                       transition: "all 0.3s",
@@ -2990,7 +3071,7 @@ export const VisualDesigner = (): JSX.Element => {
                   <label
                     style={{
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 16,
+                      fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
                       fontWeight: 600,
                       color: "#f0efee",
                       display: "block",
@@ -3014,7 +3095,7 @@ export const VisualDesigner = (): JSX.Element => {
                       border: "1px solid rgba(197, 149, 110, 0.2)",
                       borderRadius: 8,
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 14,
+                      fontSize: "clamp(0.8rem, 1vw, 0.875rem)",
                       color: "#f0efee",
                       transition: "all 0.3s",
                       boxSizing: "border-box",
@@ -3041,7 +3122,7 @@ export const VisualDesigner = (): JSX.Element => {
                   <label
                     style={{
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 16,
+                      fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
                       fontWeight: 600,
                       color: "#f0efee",
                       display: "block",
@@ -3065,7 +3146,7 @@ export const VisualDesigner = (): JSX.Element => {
                       border: "1px solid rgba(197, 149, 110, 0.2)",
                       borderRadius: 8,
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 16,
+                      fontSize: "clamp(0.8rem, 1vw, 0.875rem)",
                       color: "#f0efee",
                       transition: "all 0.3s",
                       boxSizing: "border-box",
@@ -3092,7 +3173,7 @@ export const VisualDesigner = (): JSX.Element => {
                   <label
                     style={{
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 16,
+                      fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
                       fontWeight: 600,
                       color: "#f0efee",
                       display: "block",
@@ -3116,7 +3197,7 @@ export const VisualDesigner = (): JSX.Element => {
                       border: "1px solid rgba(197, 149, 110, 0.2)",
                       borderRadius: 8,
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 14,
+                      fontSize: "clamp(0.8rem, 1vw, 0.875rem)",
                       color: "#f0efee",
                       transition: "all 0.3s",
                       boxSizing: "border-box",
@@ -3143,7 +3224,7 @@ export const VisualDesigner = (): JSX.Element => {
                   <label
                     style={{
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 16,
+                      fontSize: "clamp(0.875rem, 1.2vw, 1rem)",
                       fontWeight: 600,
                       color: "#f0efee",
                       display: "block",
@@ -3167,7 +3248,7 @@ export const VisualDesigner = (): JSX.Element => {
                       border: "1px solid rgba(197, 149, 110, 0.2)",
                       borderRadius: 8,
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 14,
+                      fontSize: "clamp(0.8rem, 1vw, 0.875rem)",
                       color: "#f0efee",
                       transition: "all 0.3s",
                       boxSizing: "border-box",
@@ -3197,7 +3278,7 @@ export const VisualDesigner = (): JSX.Element => {
                       padding: "12px 16px",
                       borderRadius: 8,
                       fontFamily: "'Inter', sans-serif",
-                      fontSize: 13,
+                      fontSize: "clamp(0.75rem, 0.9vw, 0.8125rem)",
                       fontWeight: 500,
                       textAlign: "center",
                       backgroundColor:
@@ -3227,7 +3308,7 @@ export const VisualDesigner = (): JSX.Element => {
                     border: "none",
                     borderRadius: 8,
                     fontFamily: "'Inter', sans-serif",
-                    fontSize: 14,
+                    fontSize: "clamp(0.8rem, 1vw, 0.875rem)",
                     fontWeight: 1000,
                     color: "#000000",
                     cursor: formSubmitting ? "not-allowed" : "pointer",
