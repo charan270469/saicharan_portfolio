@@ -100,7 +100,7 @@ export const VisualDesigner = (): JSX.Element => {
       name: "AutoOps AI",
       description:
         "Autonomous multi-agent workflow engine for enterprise operations with self-healing failure recovery, LLM-powered meeting intelligence, and a real-time audit dashboard.",
-      github: "https://github.com/charan270469/autoops-ai",
+      github: "https://github.com/charan270469/autoops_ai",
       tech: [
         "Groq",
         "Llama 3.3 70B",
@@ -121,7 +121,7 @@ export const VisualDesigner = (): JSX.Element => {
       name: "ScanGo",
       description:
         "AI-powered smart retail system bridging physical shopping and digital convenience with real-time inventory sync, blockchain-signed QR receipts, and a dual-mode cashier/guard terminal.",
-      github: "https://github.com/charan270469/scango_modified",
+      github: "https://github.com/charan270469/scan-go",
       tech: [
         "React",
         "Node.js",
@@ -267,10 +267,10 @@ export const VisualDesigner = (): JSX.Element => {
       }
     } else if (showAboutMe) {
       updateMetaTags({
-        title: "About Sai Charan — Full-Stack & AI Engineer Portfolio",
+        title: "About Sai Charan — AI/ML Engineer & Full-Stack Developer",
         description:
           "Learn more about Sai Charan, a B.Tech student in Data Science & AI with production experience building LLM pipelines, RAG systems, and cloud deployments.",
-        ogTitle: "About Sai Charan — Software Engineer",
+        ogTitle: "About Sai Charan — AI/ML Engineer",
         canonicalUrl: `https://saicharan.dev/#aboutme`,
       });
     } else if (activePage === "projects") {
