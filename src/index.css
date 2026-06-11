@@ -89,3 +89,9 @@ body {
 .animate-modal-slide-in {
   animation: modalSlideInFromBottom 0.6s ease-out forwards;
 }
+
+@media (max-width: 767px) {
+  .logo-loop-container {
+    display: none !important;
+  }
+}

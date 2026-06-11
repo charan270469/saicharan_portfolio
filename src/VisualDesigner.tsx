@@ -561,286 +561,556 @@ export const VisualDesigner = (): JSX.Element => {
                 }}
               />
 
-              {/* ── Main rounded card ── */}
-              <div
-                style={{
-                  position: isMobile ? "relative" : "absolute",
-                  top: isMobile ? 0 : 50,
-                  left: isMobile ? 0 : -40,
-                  width: isMobile ? "100%" : 1520,
-                  height: isMobile ? "auto" : 736,
-                  display: showAboutMe ? "none" : "block",
-                  minHeight: isMobile ? "500px" : "unset",
-                  order: isMobile ? 3 : 0,
-                  zIndex: 1,
-                  marginTop: isMobile ? "40px" : 0,
-                }}
-              >
-                <BorderGlow
-                  backgroundColor="rgba(30,29,28,1)"
-                  borderRadius={24}
-                  glowColor="40 80 80"
-                  glowRadius={40}
-                  glowIntensity={0.7}
-                  edgeSensitivity={30}
-                  coneSpread={25}
-                  colors={["#C5956E", "#8A7361", "#1A1A1A"]}
-                  fillOpacity={0.5}
-                  className="border-glow-wrapper"
+              {isMobile ? (
+                <div
+                  style={{
+                    width: "100%",
+                    maxWidth: "480px",
+                    display: "flex",
+                    flexDirection: "column",
+                    zIndex: 1,
+                  }}
                 >
-                  {/* "Design that speaks" — top-right inside card */}
-                  <p
-                    className={
-                      isInitialMountRef.current ? "animate-slide-in-right" : ""
-                    }
-                    style={{
-                      position: isMobile ? "relative" : "absolute",
-                      top: isMobile ? 20 : 120,
-                      right: isMobile ? 0 : 52,
-                      width: isMobile ? "100%" : 150,
-                      fontFamily: "'Inter', sans-serif",
-                      fontWeight: 300,
-                      color: "#d1d4db",
-                      fontSize: isMobile ? 14 : 15.5,
-                      textAlign: isMobile ? "center" : "right",
-                      lineHeight: "24px",
-                      margin: isMobile ? "20px 0" : 0,
-                      zIndex: 10,
-                    }}
+                  <BorderGlow
+                    backgroundColor="rgba(30,29,28,1)"
+                    borderRadius={24}
+                    glowColor="40 80 80"
+                    glowRadius={40}
+                    glowIntensity={0.7}
+                    edgeSensitivity={30}
+                    coneSpread={25}
+                    colors={["#C5956E", "#8A7361", "#1A1A1A"]}
+                    fillOpacity={0.5}
+                    className="border-glow-wrapper"
                   >
-                    Code that thinks.
-                    <br />
-                    Systems that scale.
-                  </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        padding: "32px 20px",
+                        position: "relative",
+                        zIndex: 1,
+                      }}
+                    >
+                      {/* DEVELOPER & DESIGNER */}
+                      <div
+                        style={{
+                          fontFamily: "'Inter', sans-serif",
+                          fontWeight: 800,
+                          color: "#d2b48b",
+                          fontSize: "0.85rem",
+                          textAlign: "center",
+                          letterSpacing: "2.4px",
+                          lineHeight: "1.2",
+                          marginBottom: "20px",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        DEVELOPER &amp; DESIGNER
+                      </div>
 
-                  {/* Giant PORTFOLIO text — inside card, two lines */}
+                      {/* Stacked background text PORT / FOLIO and overlapping image */}
+                      <div
+                        style={{
+                          position: "relative",
+                          width: "100%",
+                          height: "clamp(380px, 55vh, 480px)",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "flex-end",
+                          overflow: "visible",
+                          marginBottom: "24px",
+                        }}
+                      >
+                        {/* Background text: PORT FOLIO stacked */}
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "30px",
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "flex-start",
+                            alignItems: "center",
+                            zIndex: 1,
+                            userSelect: "none",
+                            pointerEvents: "none",
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 900,
+                              fontSize: "clamp(95px, 28vw, 145px)",
+                              lineHeight: "0.8",
+                              letterSpacing: "-2px",
+                              background:
+                                "linear-gradient(128deg, rgba(201,138,94,1) 0%, rgba(254,221,177,1) 100%)",
+                              WebkitBackgroundClip: "text",
+                              WebkitTextFillColor: "transparent",
+                              backgroundClip: "text",
+                              opacity: 0.85,
+                              textAlign: "center",
+                            }}
+                          >
+                            PORT
+                          </div>
+                          <div
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 900,
+                              fontSize: "clamp(95px, 28vw, 145px)",
+                              lineHeight: "0.8",
+                              letterSpacing: "-2px",
+                              background:
+                                "linear-gradient(128deg, rgba(201,138,94,1) 0%, rgba(254,221,177,1) 100%)",
+                              WebkitBackgroundClip: "text",
+                              WebkitTextFillColor: "transparent",
+                              backgroundClip: "text",
+                              opacity: 0.85,
+                              textAlign: "center",
+                            }}
+                          >
+                            FOLIO
+                          </div>
+                        </div>
+
+                        {/* Image of Sai Charan overlapping the text */}
+                        <img
+                          src={prBwlow1}
+                          alt="Sai Charan (saicharandev)"
+                          onClick={handleImageClick}
+                          style={{
+                            height: "100%",
+                            maxHeight: "440px",
+                            width: "auto",
+                            objectFit: "contain",
+                            zIndex: 2,
+                            cursor: "pointer",
+                            filter: "drop-shadow(0px 10px 20px rgba(0,0,0,0.7))",
+                            transition: "transform 0.3s",
+                          }}
+                        />
+                      </div>
+
+                      {/* Name */}
+                      <h1
+                        style={{
+                          fontFamily: "'Inter', sans-serif",
+                          fontWeight: 900,
+                          color: "#d2b48b",
+                          fontSize: "clamp(2rem, 8vw, 2.75rem)",
+                          textAlign: "center",
+                          margin: "0 0 6px 0",
+                          letterSpacing: "1px",
+                        }}
+                      >
+                        SAI CHARAN
+                      </h1>
+
+                      {/* Tagline */}
+                      <div
+                        style={{
+                          fontFamily: "'Inter', sans-serif",
+                          fontWeight: 300,
+                          color: "#d1d4db",
+                          fontSize: "clamp(0.95rem, 4vw, 1.15rem)",
+                          textAlign: "center",
+                          marginBottom: "20px",
+                        }}
+                      >
+                        Detach &amp; do it...
+                      </div>
+
+                      {/* Social links row */}
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 24,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginBottom: "20px",
+                        }}
+                      >
+                        <a
+                          href="https://github.com/charan270469"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            textDecoration: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <img
+                            src={githubIcon}
+                            alt="Sai Charan GitHub (saicharandev)"
+                            loading="lazy"
+                            style={{
+                              width: 18,
+                              height: 18,
+                            }}
+                          />
+                          <span
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 500,
+                              color: "#e4e7eb",
+                              fontSize: 15,
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            charan270469
+                          </span>
+                        </a>
+
+                        <a
+                          href="https://www.linkedin.com/in/sai-charan-77071b281/"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            textDecoration: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <img
+                            src={linkedinIcon}
+                            alt="Sai Charan LinkedIn (saicharandev)"
+                            loading="lazy"
+                            style={{
+                              width: 18,
+                              height: 18,
+                            }}
+                          />
+                          <span
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 500,
+                              color: "#e4e7eb",
+                              fontSize: 15,
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            saicharan
+                          </span>
+                        </a>
+                      </div>
+
+                      {/* Bio paragraph */}
+                      <p
+                        style={{
+                          width: "100%",
+                          maxWidth: "400px",
+                          fontFamily: "'Inter', sans-serif",
+                          fontWeight: 300,
+                          color: "#a8a29e",
+                          fontSize: 13.5,
+                          lineHeight: "20px",
+                          margin: 0,
+                          textAlign: "center",
+                          padding: "0 10px",
+                        }}
+                      >
+                        Between data and intelligence lies the space where I build.
+                        From engineering LLM pipelines to architecting agentic
+                        systems, my work revolves around precision, scalability, and
+                        real-world impact. Through every project, I help ideas
+                        evolve into systems that think, adapt, and deliver with
+                        purpose.
+                      </p>
+                    </div>
+                  </BorderGlow>
+                </div>
+              ) : (
+                <>
                   <div
-                    className={
-                      isInitialMountRef.current ? "animate-slide-in-top" : ""
-                    }
                     style={{
-                      position: isMobile ? "relative" : "absolute",
-                      top: isMobile ? 0 : 210,
-                      left: isMobile ? 0 : 30,
-                      width: isMobile ? "100%" : 1450,
-                      fontFamily: "'Inter', sans-serif",
-                      fontWeight: 900,
-                      fontSize: isMobile ? "clamp(50px, 15vw, 120px)" : 250,
-                      textAlign: "center",
-                      letterSpacing: isMobile ? "-1px" : "-2px",
-                      lineHeight: "0.9",
-                      background:
-                        "linear-gradient(128deg, rgba(201,138,94,1) 0%, rgba(254,221,177,1) 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                      opacity: 0.85,
-                      userSelect: "none",
-                      padding: isMobile ? "20px 0" : 0,
+                      position: "absolute",
+                      top: 50,
+                      left: -40,
+                      width: 1520,
+                      height: 736,
+                      display: showAboutMe ? "none" : "block",
+                      zIndex: 1,
                     }}
                   >
-                    PORTFOLIO
+                    <BorderGlow
+                      backgroundColor="rgba(30,29,28,1)"
+                      borderRadius={24}
+                      glowColor="40 80 80"
+                      glowRadius={40}
+                      glowIntensity={0.7}
+                      edgeSensitivity={30}
+                      coneSpread={25}
+                      colors={["#C5956E", "#8A7361", "#1A1A1A"]}
+                      fillOpacity={0.5}
+                      className="border-glow-wrapper"
+                    >
+                      {/* "Design that speaks" — top-right inside card */}
+                      <p
+                        className={
+                          isInitialMountRef.current ? "animate-slide-in-right" : ""
+                        }
+                        style={{
+                          position: "absolute",
+                          top: 120,
+                          right: 52,
+                          width: 150,
+                          fontFamily: "'Inter', sans-serif",
+                          fontWeight: 300,
+                          color: "#d1d4db",
+                          fontSize: 15.5,
+                          textAlign: "right",
+                          lineHeight: "24px",
+                          margin: 0,
+                          zIndex: 10,
+                        }}
+                      >
+                        Code that thinks.
+                        <br />
+                        Systems that scale.
+                      </p>
+
+                      {/* Giant PORTFOLIO text — inside card, two lines */}
+                      <div
+                        className={
+                          isInitialMountRef.current ? "animate-slide-in-top" : ""
+                        }
+                        style={{
+                          position: "absolute",
+                          top: 210,
+                          left: 30,
+                          width: 1450,
+                          fontFamily: "'Inter', sans-serif",
+                          fontWeight: 900,
+                          fontSize: 250,
+                          textAlign: "center",
+                          letterSpacing: "-2px",
+                          lineHeight: "0.9",
+                          background:
+                            "linear-gradient(128deg, rgba(201,138,94,1) 0%, rgba(254,221,177,1) 100%)",
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          backgroundClip: "text",
+                          opacity: 0.85,
+                          userSelect: "none",
+                          padding: 0,
+                        }}
+                      >
+                        PORTFOLIO
+                      </div>
+
+                      {/* ── Bottom-left: social links + bio  ── */}
+                      <div
+                        className={
+                          isInitialMountRef.current ? "animate-slide-in-left" : ""
+                        }
+                        style={{
+                          position: "absolute",
+                          top: 570,
+                          left: 52,
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 16,
+                          cursor: "pointer",
+                          padding: 0,
+                          alignItems: "flex-start",
+                          width: "auto",
+                          marginTop: 0,
+                        }}
+                      >
+                        {/* Social links row */}
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: 20,
+                            alignItems: "center",
+                            flexWrap: "nowrap",
+                            justifyContent: "flex-start",
+                          }}
+                        >
+                          <a
+                            href="https://github.com/charan270469"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 8,
+                              textDecoration: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <img
+                              src={githubIcon}
+                              alt="Sai Charan GitHub (saicharandev)"
+                              loading="lazy"
+                              style={{ width: 18, height: 18 }}
+                            />
+                            <span
+                              style={{
+                                fontFamily: "'Inter', sans-serif",
+                                fontWeight: 500,
+                                color: "#e4e7eb",
+                                fontSize: 16,
+                                whiteSpace: "nowrap",
+                                cursor: "pointer",
+                              }}
+                            >
+                              charan270469
+                            </span>
+                          </a>
+
+                          <a
+                            href="https://www.linkedin.com/in/sai-charan-77071b281/"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 8,
+                              textDecoration: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <img
+                              src={linkedinIcon}
+                              alt="Sai Charan LinkedIn (saicharandev)"
+                              loading="lazy"
+                              style={{ width: 18, height: 18 }}
+                            />
+                            <span
+                              style={{
+                                fontFamily: "'Inter', sans-serif",
+                                fontWeight: 500,
+                                color: "#e4e7eb",
+                                fontSize: 16,
+                                whiteSpace: "nowrap",
+                                cursor: "pointer",
+                              }}
+                            >
+                              saicharan
+                            </span>
+                          </a>
+                        </div>
+
+                        {/* Bio paragraph */}
+                        <p
+                          style={{
+                            width: 387,
+                            maxWidth: 600,
+                            fontFamily: "'Inter', sans-serif",
+                            fontWeight: 300,
+                            color: "#d1d4db",
+                            fontSize: 13,
+                            lineHeight: "20px",
+                            margin: 0,
+                            textAlign: "left",
+                          }}
+                        >
+                          Between data and intelligence lies the space where I
+                          build. From engineering LLM pipelines to architecting
+                          agentic systems, my work revolves around precision,
+                          scalability, and real-world impact. Through every project,
+                          I help ideas evolve into systems that think, adapt, and
+                          deliver with purpose.
+                        </p>
+                      </div>
+
+                      {/* ── Bottom-right: DEVELOPER & DESIGNER ── */}
+                      <div
+                        className={
+                          isInitialMountRef.current ? "animate-slide-in-right" : ""
+                        }
+                        style={{
+                          position: "absolute",
+                          top: 610,
+                          right: 50,
+                          width: 363,
+                          fontFamily: "'Inter', sans-serif",
+                          fontWeight: 800,
+                          color: "#d2b48b",
+                          fontSize: 48.1,
+                          textAlign: "right",
+                          letterSpacing: "2.4px",
+                          lineHeight: "48px",
+                          padding: 0,
+                          marginTop: 0,
+                        }}
+                      >
+                        DEVELOPER &amp; DESIGNER
+                      </div>
+                    </BorderGlow>
                   </div>
 
-                  {/* ── Bottom-left: social links + bio  ── */}
-                  {/* Positioned using original coords: page y=614, card starts y=37 → card-relative y=577 */}
+                  {/* ── Name + tagline (overlapping card top-left) ── */}
                   <div
                     className={
                       isInitialMountRef.current ? "animate-slide-in-left" : ""
                     }
                     style={{
-                      position: isMobile ? "relative" : "absolute",
-                      top: isMobile ? "auto" : 570,
-                      left: isMobile ? 0 : 52,
+                      position: "absolute",
+                      top: 172,
+                      left: 12,
                       display: "flex",
                       flexDirection: "column",
-                      gap: 16,
-                      cursor: "pointer",
-                      padding: isMobile ? "20px" : 0,
-                      alignItems: isMobile ? "center" : "flex-start",
-                      width: isMobile ? "100%" : "auto",
-                      marginTop: isMobile ? 40 : 0,
+                      gap: 4,
+                      alignItems: "flex-start",
+                      zIndex: 20,
+                      marginTop: 0,
                     }}
                   >
-                    {/* Social links row */}
-                    <div
+                    <h1
                       style={{
-                        display: "flex",
-                        gap: 20,
-                        alignItems: "center",
-                        flexWrap: isMobile ? "wrap" : "nowrap",
-                        justifyContent: isMobile ? "center" : "flex-start",
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 800,
+                        color: "#d2b48b",
+                        fontSize: 24.3,
+                        letterSpacing: "0.6px",
+                        lineHeight: "32px",
+                        whiteSpace: "nowrap",
+                        margin: 0,
                       }}
                     >
-                      <a
-                        href="https://github.com/charan270469"
-                        rel="noopener noreferrer"
-                        target="_blank"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                          textDecoration: "none",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <img
-                          src={githubIcon}
-                          alt="Sai Charan GitHub (saicharandev)"
-                          loading="lazy"
-                          style={{ width: 18, height: 18 }}
-                        />
-                        <span
-                          style={{
-                            fontFamily: "'Inter', sans-serif",
-                            fontWeight: 500,
-                            color: "#e4e7eb",
-                            fontSize: 16,
-                            whiteSpace: "nowrap",
-                            cursor: "pointer",
-                          }}
-                        >
-                          charan270469
-                        </span>
-                      </a>
-
-                      <a
-                        href="https://www.linkedin.com/in/sai-charan-77071b281/"
-                        rel="noopener noreferrer"
-                        target="_blank"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                          textDecoration: "none",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <img
-                          src={linkedinIcon}
-                          alt="Sai Charan LinkedIn (saicharandev)"
-                          loading="lazy"
-                          style={{ width: 18, height: 18 }}
-                        />
-                        <span
-                          style={{
-                            fontFamily: "'Inter', sans-serif",
-                            fontWeight: 500,
-                            color: "#e4e7eb",
-                            fontSize: 16,
-                            whiteSpace: "nowrap",
-                            cursor: "pointer",
-                          }}
-                        >
-                          saicharan
-                        </span>
-                      </a>
-                    </div>
-
-                    {/* Bio paragraph */}
-                    <p
+                      SAI CHARAN
+                    </h1>
+                    <div
                       style={{
-                        width: isMobile ? "100%" : 387,
-                        maxWidth: 600,
                         fontFamily: "'Inter', sans-serif",
                         fontWeight: 300,
                         color: "#d1d4db",
-                        fontSize: 13,
-                        lineHeight: "20px",
-                        margin: 0,
-                        textAlign: isMobile ? "center" : "left",
+                        fontSize: 16.1,
+                        lineHeight: "24px",
+                        whiteSpace: "nowrap",
                       }}
                     >
-                      Between data and intelligence lies the space where I
-                      build. From engineering LLM pipelines to architecting
-                      agentic systems, my work revolves around precision,
-                      scalability, and real-world impact. Through every project,
-                      I help ideas evolve into systems that think, adapt, and
-                      deliver with purpose.
-                    </p>
+                      Detach &amp; do it...
+                    </div>
                   </div>
-
-                  {/* ── Bottom-right: DEVELOPER & DESIGNER ── */}
-                  {/* Original: page y=640, card y=37 → card-relative y=603, height=100 → ends at 703, well inside 736 */}
-                  <div
-                    className={
-                      isInitialMountRef.current ? "animate-slide-in-right" : ""
-                    }
-                    style={{
-                      position: isMobile ? "relative" : "absolute",
-                      top: isMobile ? "auto" : 610,
-                      right: isMobile ? 0 : 50,
-                      width: isMobile ? "100%" : 363,
-                      fontFamily: "'Inter', sans-serif",
-                      fontWeight: 800,
-                      color: "#d2b48b",
-                      fontSize: isMobile ? 24 : 48.1,
-                      textAlign: isMobile ? "center" : "right",
-                      letterSpacing: "2.4px",
-                      lineHeight: isMobile ? "32px" : "48px",
-                      padding: isMobile ? "20px" : 0,
-                      marginTop: isMobile ? 20 : 0,
-                    }}
-                  >
-                    DEVELOPER &amp; DESIGNER
-                  </div>
-                </BorderGlow>
-              </div>
-
-              {/* ── Name + tagline (overlapping card top-left) ── */}
-              <div
-                className={
-                  isInitialMountRef.current ? "animate-slide-in-left" : ""
-                }
-                style={{
-                  position: isMobile ? "relative" : "absolute",
-                  top: isMobile ? 0 : 172,
-                  left: isMobile ? 0 : 12,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 4,
-                  alignItems: isMobile ? "center" : "flex-start",
-                  zIndex: 20,
-                  marginTop: isMobile ? "40px" : 0,
-                  order: isMobile ? 1 : 0,
-                }}
-              >
-                <h1
-                  style={{
-                    fontFamily: "'Inter', sans-serif",
-                    fontWeight: 800,
-                    color: "#d2b48b",
-                    fontSize: isMobile ? 32 : 24.3,
-                    letterSpacing: "0.6px",
-                    lineHeight: "32px",
-                    whiteSpace: "nowrap",
-                    margin: 0,
-                  }}
-                >
-                  SAI CHARAN
-                </h1>
-                <div
-                  style={{
-                    fontFamily: "'Inter', sans-serif",
-                    fontWeight: 300,
-                    color: "#d1d4db",
-                    fontSize: isMobile ? 18 : 16.1,
-                    lineHeight: "24px",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  saicharandev — Detach &amp; do it...
-                </div>
-              </div>
+                </>
+              )}
 
               {/* ── Navigation bar ── */}
               <header
                 className={
-                  isInitialMountRef.current ? "animate-slide-in-top" : ""
+                  isInitialMountRef.current
+                    ? isMobile
+                      ? "animate-slide-in-bottom"
+                      : "animate-slide-in-top"
+                    : ""
                 }
                 style={{
                   position: "fixed",
-                  top: isMobile ? 10 : 40,
+                  top: isMobile ? "auto" : 40,
+                  bottom: isMobile ? 16 : "auto",
                   left: 0,
                   width: "100%",
                   zIndex: 50,
@@ -848,13 +1118,15 @@ export const VisualDesigner = (): JSX.Element => {
                   justifyContent: "center",
                   paddingLeft: isMobile ? "0.5rem" : "1rem",
                   paddingRight: isMobile ? "0.5rem" : "1rem",
-                  paddingTop: isMobile ? "0.5rem" : "1rem",
+                  paddingTop: isMobile ? "0" : "1rem",
+                  paddingBottom: isMobile ? "0.5rem" : "0",
                 }}
               >
                 <nav
                   style={{
                     borderRadius: 9999,
-                    marginTop: isMobile ? "0.5rem" : "1.5rem",
+                    marginTop: isMobile ? "0" : "1.5rem",
+                    marginBottom: isMobile ? "0.5rem" : "0",
                     marginLeft: "auto",
                     marginRight: "auto",
                     backgroundColor: "rgba(19, 19, 19, 0.8)",
@@ -862,11 +1134,13 @@ export const VisualDesigner = (): JSX.Element => {
                     display: "flex",
                     alignItems: "center",
                     gap: isMobile ? "1rem" : "2rem",
-                    paddingLeft: isMobile ? "1rem" : "2rem",
-                    paddingRight: isMobile ? "1rem" : "2rem",
+                    paddingLeft: isMobile ? "1.25rem" : "2rem",
+                    paddingRight: isMobile ? "1.25rem" : "2rem",
                     paddingTop: "0.75rem",
                     paddingBottom: "0.75rem",
-                    boxShadow: "0px 20px 50px rgba(0,0,0,0.3)",
+                    boxShadow: isMobile
+                      ? "0px -10px 30px rgba(0,0,0,0.5)"
+                      : "0px 20px 50px rgba(0,0,0,0.3)",
                     maxWidth: isMobile ? "95%" : "none",
                   }}
                 >
@@ -939,71 +1213,71 @@ export const VisualDesigner = (): JSX.Element => {
               </header>
 
               {/* ── Portrait photo (centered on card, anchored to bottom) ── */}
-              <div
-                className={
-                  isInitialMountRef.current ? "animate-slide-in-bottom" : ""
-                }
-                style={{
-                  position: isMobile ? "relative" : "absolute",
-                  top: isMobile ? 0 : 32,
-                  left: isMobile ? 0 : 20,
-                  width: isMobile ? "100%" : 1400,
-                  height: isMobile ? "auto" : 753,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: isMobile ? "center" : "flex-end",
-                  pointerEvents: isMobile ? "auto" : "none",
-                  marginTop: isMobile ? "40px" : 0,
-                  order: isMobile ? 2 : 0, // Show photo between name and card on mobile
-                  zIndex: 5, // Above background and card
-                  minHeight: isMobile ? "300px" : "auto",
-                }}
-                onMouseEnter={handleImageHover}
-                onMouseMove={handleImageMove}
-                onMouseLeave={handleImageLeave}
-              >
-                <img
-                  src={prBwlow1}
-                  alt="Sai Charan (saicharandev) - Full-Stack Developer & AI Engineer Portfolio"
-                  loading="lazy"
-                  onClick={handleImageClick}
+              {!isMobile && (
+                <div
+                  className={
+                    isInitialMountRef.current ? "animate-slide-in-bottom" : ""
+                  }
                   style={{
-                    maxWidth: isMobile ? "90%" : 650,
-                    maxHeight: isMobile ? "50vh" : 770,
-                    width: "auto",
-                    height: "auto",
-                    objectFit: "contain",
-                    pointerEvents: "auto",
-                    cursor: "pointer",
-                    transition: "transform 0.3s",
-                    display: "block",
+                    position: "absolute",
+                    top: 32,
+                    left: 20,
+                    width: 1400,
+                    height: 753,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "flex-end",
+                    pointerEvents: "none",
+                    marginTop: 0,
+                    zIndex: 5,
                   }}
-                />
-
-                {/* About Me Tooltip */}
-                {imageHovered && (
-                  <div
+                  onMouseEnter={handleImageHover}
+                  onMouseMove={handleImageMove}
+                  onMouseLeave={handleImageLeave}
+                >
+                  <img
+                    src={prBwlow1}
+                    alt="Sai Charan (saicharandev) - Full-Stack Developer & AI Engineer Portfolio"
+                    loading="lazy"
+                    onClick={handleImageClick}
                     style={{
-                      position: "fixed",
-                      left: tooltipPos.x + 5,
-                      top: tooltipPos.y - 35,
-                      backgroundColor: "#feddb1",
-                      border: "1px solid #C5956E",
-                      borderRadius: 8,
-                      padding: "6px 12px",
-                      fontSize: "clamp(0.7rem, 0.9vw, 0.75rem)",
-                      fontWeight: 500,
-                      color: "#000000ff",
-                      fontFamily: "'Inter', sans-serif",
-                      whiteSpace: "nowrap",
-                      pointerEvents: "none",
-                      zIndex: 1000,
+                      maxWidth: 650,
+                      maxHeight: 770,
+                      width: "auto",
+                      height: "auto",
+                      objectFit: "contain",
+                      pointerEvents: "auto",
+                      cursor: "pointer",
+                      transition: "transform 0.3s",
+                      display: "block",
                     }}
-                  >
-                    Click to know me
-                  </div>
-                )}
-              </div>
+                  />
+
+                  {/* About Me Tooltip */}
+                  {imageHovered && (
+                    <div
+                      style={{
+                        position: "fixed",
+                        left: tooltipPos.x + 5,
+                        top: tooltipPos.y - 35,
+                        backgroundColor: "#feddb1",
+                        border: "1px solid #C5956E",
+                        borderRadius: 8,
+                        padding: "6px 12px",
+                        fontSize: "0.75rem",
+                        fontWeight: 500,
+                        color: "#000000ff",
+                        fontFamily: "'Inter', sans-serif",
+                        whiteSpace: "nowrap",
+                        pointerEvents: "none",
+                        zIndex: 1000,
+                      }}
+                    >
+                      Click to know me
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* ── About Me Modal Section (Portal) ── */}
               {showAboutMe &&
@@ -1027,14 +1301,17 @@ export const VisualDesigner = (): JSX.Element => {
                       onClick={(e) => e.stopPropagation()}
                       style={{
                         position: "relative",
-                        width: "95%",
+                        width: isMobile ? "calc(100% - 24px)" : "95%",
                         maxWidth: 1600,
                         height: isMobile ? "90vh" : "auto",
                         maxHeight: "95vh",
                         backgroundColor: "rgba(30, 29, 28, 1)",
                         borderRadius: 24,
                         cursor: "default",
-                        overflow: "hidden",
+                        overflowX: "hidden",
+                        overflowY: isMobile ? "auto" : "hidden",
+                        display: isMobile ? "flex" : "block",
+                        flexDirection: isMobile ? "column" : undefined,
                       }}
                     >
                       <BorderGlow
@@ -1054,13 +1331,13 @@ export const VisualDesigner = (): JSX.Element => {
                           onClick={() => setShowAboutMe(false)}
                           style={{
                             position: "absolute",
-                            top: 20,
-                            right: 20,
+                            top: isMobile ? 16 : 20,
+                            right: isMobile ? 16 : 20,
                             width: 40,
                             height: 40,
                             borderRadius: "50%",
-                            backgroundColor: "rgba(197, 149, 110, 0.2)",
-                            border: "1px solid rgba(197, 149, 110, 0.4)",
+                            backgroundColor: isMobile ? "rgba(30, 29, 28, 0.9)" : "rgba(197, 149, 110, 0.2)",
+                            border: isMobile ? "1px solid rgba(197, 149, 110, 0.6)" : "1px solid rgba(197, 149, 110, 0.4)",
                             color: "#d2b48b",
                             fontSize: "clamp(1.25rem, 2vw, 1.5rem)",
                             cursor: "pointer",
@@ -1068,14 +1345,13 @@ export const VisualDesigner = (): JSX.Element => {
                             alignItems: "center",
                             justifyContent: "center",
                             transition: "all 0.3s",
+                            zIndex: 100,
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                              "rgba(197, 149, 110, 0.4)";
+                            e.currentTarget.style.backgroundColor = isMobile ? "rgba(30, 29, 28, 1)" : "rgba(197, 149, 110, 0.4)";
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                              "rgba(197, 149, 110, 0.2)";
+                            e.currentTarget.style.backgroundColor = isMobile ? "rgba(30, 29, 28, 0.9)" : "rgba(197, 149, 110, 0.2)";
                           }}
                         >
                           ✕
@@ -1085,15 +1361,17 @@ export const VisualDesigner = (): JSX.Element => {
                         <div
                           style={{
                             padding: isMobile
-                              ? "60px 20px 20px 20px"
+                              ? "70px 15px 30px 15px"
                               : "30px 60px 20px 60px",
-                            height: "100%",
+                            flex: 1,
+                            minHeight: 0,
+                            width: "100%",
                             display: isMobile ? "flex" : "grid",
                             flexDirection: isMobile ? "column" : "row",
                             gridTemplateColumns: isMobile ? "1fr" : "1fr 1.2fr",
-                            gap: isMobile ? 20 : 40,
+                            gap: isMobile ? 24 : 40,
                             alignItems: "flex-start",
-                            overflowY: isMobile ? "auto" : "visible",
+                            overflowY: isMobile ? "visible" : "auto",
                           }}
                         >
                           {/* Left: Text Content */}
@@ -1195,7 +1473,7 @@ export const VisualDesigner = (): JSX.Element => {
                               gridTemplateRows: isMobile
                                 ? "auto"
                                 : "auto auto auto",
-                              gap: 8,
+                              gap: isMobile ? 12 : 8,
                               width: "100%",
                               height: "100%",
                             }}
@@ -1207,7 +1485,7 @@ export const VisualDesigner = (): JSX.Element => {
                                 gridRow: isMobile ? "auto" : "1 / 2",
                                 backgroundColor: "rgba(70, 70, 70, 0.4)",
                                 borderRadius: 12,
-                                padding: isMobile ? 20 : 16,
+                                padding: isMobile ? 12 : 16,
                                 border: "1px solid rgba(255, 255, 255, 0.1)",
                                 display: "flex",
                                 flexDirection: "column",
@@ -1301,7 +1579,7 @@ export const VisualDesigner = (): JSX.Element => {
                                 gridRow: isMobile ? "auto" : "2 / 3",
                                 backgroundColor: "rgba(70, 70, 70, 0.4)",
                                 borderRadius: 12,
-                                padding: isMobile ? 16 : 12,
+                                padding: isMobile ? 12 : 12,
                                 border: "1px solid rgba(255, 255, 255, 0.1)",
                                 display: "flex",
                                 flexDirection: "column",
@@ -1363,7 +1641,7 @@ export const VisualDesigner = (): JSX.Element => {
                                 gridRow: isMobile ? "auto" : "2 / 3",
                                 backgroundColor: "rgba(70, 70, 70, 0.4)",
                                 borderRadius: 12,
-                                padding: isMobile ? 16 : 12,
+                                padding: isMobile ? 12 : 12,
                                 border: "1px solid rgba(255, 255, 255, 0.1)",
                                 display: "flex",
                                 flexDirection: "column",
@@ -1425,7 +1703,7 @@ export const VisualDesigner = (): JSX.Element => {
                                 gridRow: isMobile ? "auto" : "3 / 4",
                                 backgroundColor: "rgba(210, 180, 139, 0.12)",
                                 borderRadius: 12,
-                                padding: isMobile ? 20 : 16,
+                                padding: isMobile ? 12 : 16,
                                 border: "1px solid rgba(210, 180, 139, 0.3)",
                                 display: "flex",
                                 flexDirection: "column",
@@ -1459,9 +1737,10 @@ export const VisualDesigner = (): JSX.Element => {
                               </p>
                               <div
                                 style={{
-                                  display: "grid",
-                                  gridTemplateColumns: "1fr 1fr",
-                                  gap: 8,
+                                  display: isMobile ? "flex" : "grid",
+                                  flexDirection: "column",
+                                  gridTemplateColumns: isMobile ? "none" : "1fr 1fr",
+                                  gap: isMobile ? 16 : 8,
                                 }}
                               >
                                 <div>
@@ -1594,35 +1873,38 @@ export const VisualDesigner = (): JSX.Element => {
                           </div>
 
                           {/* Tech Stack Logo Loop - Full Width Below */}
-                          <div
-                            style={{
-                              gridColumn: "1 / 3",
-                              width: "100%",
-                              height: 80,
-                              marginTop: 0,
-                              marginBottom: 0,
-                            }}
-                          >
-                            <LogoLoop
-                              logos={techLogos}
-                              speed={70}
-                              direction="left"
-                              logoHeight={40}
-                              gap={30}
-                              pauseOnHover
-                              scaleOnHover
-                              fadeOut
-                              fadeOutColor="rgba(30, 29, 28, 1)"
-                              ariaLabel="Technology stack"
+                          {!isMobile && (
+                            <div
+                              className="logo-loop-container"
                               style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                filter:
-                                  "brightness(0) saturate(100%) invert(88%) sepia(23%) saturate(85%) hue-rotate(4deg)",
+                                gridColumn: "1 / 3",
+                                width: "100%",
+                                height: 80,
+                                marginTop: 0,
+                                marginBottom: 0,
                               }}
-                            />
-                          </div>
+                            >
+                              <LogoLoop
+                                logos={techLogos}
+                                speed={70}
+                                direction="left"
+                                logoHeight={40}
+                                gap={30}
+                                pauseOnHover
+                                scaleOnHover
+                                fadeOut
+                                fadeOutColor="rgba(30, 29, 28, 1)"
+                                ariaLabel="Technology stack"
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  filter:
+                                    "brightness(0) saturate(100%) invert(88%) sepia(23%) saturate(85%) hue-rotate(4deg)",
+                                }}
+                              />
+                            </div>
+                          )}
                         </div>
                       </BorderGlow>
                     </div>
@@ -2280,16 +2562,16 @@ export const VisualDesigner = (): JSX.Element => {
                                 gap: 0,
                               }}
                             >
-                              {/* Row 1: First 3 */}
+                              {/* Row 1: First 2 techs on mobile, 4 on desktop */}
                               <div
                                 style={{
                                   display: "flex",
-                                  flexWrap: "wrap",
-                                  gap: -10,
+                                  flexWrap: "nowrap",
+                                  gap: 0,
                                 }}
                               >
                                 {(project.displayTech || project.tech)
-                                  .slice(0, 4)
+                                  .slice(0, isMobile ? 2 : 4)
                                   .map((tech, idx) => (
                                     <span
                                       key={idx}
@@ -2308,34 +2590,64 @@ export const VisualDesigner = (): JSX.Element => {
                                     </span>
                                   ))}
                               </div>
-                              {/* Row 2: Remaining techs (up to 4 more) */}
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexWrap: "wrap",
-                                  gap: -10,
-                                }}
-                              >
-                                {(project.displayTech || project.tech)
-                                  .slice(4, 7)
-                                  .map((tech, idx) => (
-                                    <span
-                                      key={idx + 3}
-                                      style={{
-                                        margin: 4,
-                                        backgroundColor: "#d2b48b",
-                                        color: "#000000",
-                                        fontSize: "12px",
-                                        fontWeight: 700,
-                                        padding: "6px 12px",
-                                        borderRadius: 8,
-                                        fontFamily: "'Inter', sans-serif",
-                                      }}
-                                    >
-                                      {tech}
-                                    </span>
-                                  ))}
-                              </div>
+                              {/* Row 2: 3rd tech on mobile as separate row, remaining techs on desktop */}
+                              {isMobile ? (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexWrap: "nowrap",
+                                    gap: 0,
+                                  }}
+                                >
+                                  {(project.displayTech || project.tech)
+                                    .slice(2, 3)
+                                    .map((tech, idx) => (
+                                      <span
+                                        key={idx + 2}
+                                        style={{
+                                          margin: 4,
+                                          backgroundColor: "#d2b48b",
+                                          color: "#000000",
+                                          fontSize: "12px",
+                                          fontWeight: 700,
+                                          padding: "6px 12px",
+                                          borderRadius: 8,
+                                          fontFamily: "'Inter', sans-serif",
+                                        }}
+                                      >
+                                        {tech}
+                                      </span>
+                                    ))}
+                                </div>
+                              ) : (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    gap: -10,
+                                  }}
+                                >
+                                  {(project.displayTech || project.tech)
+                                    .slice(4, 7)
+                                    .map((tech, idx) => (
+                                      <span
+                                        key={idx + 4}
+                                        style={{
+                                          margin: 4,
+                                          backgroundColor: "#d2b48b",
+                                          color: "#000000",
+                                          fontSize: "12px",
+                                          fontWeight: 700,
+                                          padding: "6px 12px",
+                                          borderRadius: 8,
+                                          fontFamily: "'Inter', sans-serif",
+                                        }}
+                                      >
+                                        {tech}
+                                      </span>
+                                    ))}
+                                </div>
+                              )}
                             </div>
                           </div>
 
