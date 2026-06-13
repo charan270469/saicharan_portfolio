@@ -303,14 +303,17 @@ export const VisualDesigner = (): JSX.Element => {
   const handleNavClick = (page: string) => {
     if (page === "home") {
       homeSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+      setActivePage("home");
     } else if (page === "aboutme") {
+      // About Me is a modal — don't change activePage, open the modal
       setShowAboutMe(true);
     } else if (page === "projects") {
       portfolioSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+      setActivePage("projects");
     } else if (page === "experience") {
       experienceSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+      setActivePage("experience");
     }
-    setActivePage(page);
   };
 
   const renderNavLink = (label: string, page: string) => {
@@ -384,8 +387,8 @@ export const VisualDesigner = (): JSX.Element => {
   };
 
   const handleImageClick = () => {
+    // Open About Me modal without changing the scroll-based active nav section
     setShowAboutMe(true);
-    setActivePage("aboutme");
   };
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -440,49 +443,49 @@ export const VisualDesigner = (): JSX.Element => {
     }
   };
 
+  // Helper: compute which section is active based on current scroll position
+  const computeActivePageFromScroll = () => {
+    const container = mainContainerRef.current;
+    if (!container) return;
+
+    const scrollPosition = container.scrollTop;
+    const containerHeight = container.clientHeight;
+    const viewportCenter = scrollPosition + containerHeight / 2;
+
+    const getSectionPos = (ref: React.RefObject<HTMLDivElement>) => {
+      if (!ref.current) return Infinity;
+      let pos = 0;
+      let element: HTMLElement | null = ref.current;
+      while (element && element !== container) {
+        pos += element.offsetTop;
+        element = element.offsetParent as HTMLElement;
+      }
+      return pos;
+    };
+
+    const portfolioPos = getSectionPos(portfolioSectionRef);
+    const experiencePos = getSectionPos(experienceSectionRef);
+    const contactPos = getSectionPos(contactSectionRef);
+
+    if (scrollPosition < 50) {
+      setActivePage("home");
+    } else if (viewportCenter < portfolioPos) {
+      setActivePage("home");
+    } else if (viewportCenter < experiencePos) {
+      setActivePage("projects");
+    } else if (viewportCenter < contactPos) {
+      setActivePage("experience");
+    } else {
+      setActivePage("experience");
+    }
+  };
+
   // Scroll detection for active section
   useEffect(() => {
     const container = mainContainerRef.current;
     if (!container) return;
 
-    const handleScroll = () => {
-      // Get scroll position
-      const scrollPosition = container.scrollTop;
-      const containerHeight = container.clientHeight;
-      const viewportCenter = scrollPosition + containerHeight / 2; // Use center of viewport to determine active section
-
-      // Helper function to get section position relative to scroll container
-      const getSectionPos = (ref: React.RefObject<HTMLDivElement>) => {
-        if (!ref.current) return Infinity;
-        let pos = 0;
-        let element: HTMLElement | null = ref.current;
-
-        // Calculate position relative to main container
-        while (element && element !== container) {
-          pos += element.offsetTop;
-          element = element.offsetParent as HTMLElement;
-        }
-        return pos;
-      };
-
-      // Get positions of all sections
-      const portfolioPos = getSectionPos(portfolioSectionRef);
-      const experiencePos = getSectionPos(experienceSectionRef);
-      const contactPos = getSectionPos(contactSectionRef);
-
-      // Determine which section is currently in view (based on center of viewport)
-      if (scrollPosition < 50) {
-        setActivePage("home");
-      } else if (viewportCenter < portfolioPos) {
-        setActivePage("home");
-      } else if (viewportCenter < experiencePos) {
-        setActivePage("projects");
-      } else if (viewportCenter < contactPos) {
-        setActivePage("experience");
-      } else {
-        setActivePage("experience"); // Contact section
-      }
-    };
+    const handleScroll = () => computeActivePageFromScroll();
 
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
@@ -565,7 +568,7 @@ export const VisualDesigner = (): JSX.Element => {
                 <div
                   style={{
                     width: "100%",
-                    maxWidth: "480px",
+                    maxWidth: "500px",
                     display: "flex",
                     flexDirection: "column",
                     zIndex: 1,
@@ -599,7 +602,7 @@ export const VisualDesigner = (): JSX.Element => {
                           fontFamily: "'Inter', sans-serif",
                           fontWeight: 800,
                           color: "#d2b48b",
-                          fontSize: "0.85rem",
+                          fontSize: "1.25rem",
                           textAlign: "center",
                           letterSpacing: "2.4px",
                           lineHeight: "1.2",
@@ -628,13 +631,13 @@ export const VisualDesigner = (): JSX.Element => {
                           style={{
                             position: "absolute",
                             top: "30px",
-                            left: 0,
+                            left: -3,
                             right: 0,
                             bottom: 0,
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "flex-start",
-                            alignItems: "center",
+                            alignItems: "left",
                             zIndex: 1,
                             userSelect: "none",
                             pointerEvents: "none",
@@ -653,7 +656,7 @@ export const VisualDesigner = (): JSX.Element => {
                               WebkitTextFillColor: "transparent",
                               backgroundClip: "text",
                               opacity: 0.85,
-                              textAlign: "center",
+                              textAlign: "left",
                             }}
                           >
                             PORT
@@ -671,7 +674,7 @@ export const VisualDesigner = (): JSX.Element => {
                               WebkitTextFillColor: "transparent",
                               backgroundClip: "text",
                               opacity: 0.85,
-                              textAlign: "center",
+                              textAlign: "left",
                             }}
                           >
                             FOLIO
@@ -685,9 +688,8 @@ export const VisualDesigner = (): JSX.Element => {
                           onClick={handleImageClick}
                           style={{
                             height: "100%",
-                            maxHeight: "440px",
-                            width: "auto",
-                            objectFit: "contain",
+                            maxHeight: "460px",
+                            width: "540px",
                             zIndex: 2,
                             cursor: "pointer",
                             filter: "drop-shadow(0px 10px 20px rgba(0,0,0,0.7))",
@@ -1294,7 +1296,7 @@ export const VisualDesigner = (): JSX.Element => {
                       cursor: "pointer",
                       backdropFilter: "blur(8px)",
                     }}
-                    onClick={() => setShowAboutMe(false)}
+                    onClick={() => { setShowAboutMe(false); computeActivePageFromScroll(); }}
                   >
                     <div
                       className="animate-modal-slide-in"
@@ -1328,7 +1330,7 @@ export const VisualDesigner = (): JSX.Element => {
                       >
                         {/* Close button */}
                         <button
-                          onClick={() => setShowAboutMe(false)}
+                          onClick={() => { setShowAboutMe(false); computeActivePageFromScroll(); }}
                           style={{
                             position: "absolute",
                             top: isMobile ? 16 : 20,
