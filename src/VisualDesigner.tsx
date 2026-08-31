@@ -150,7 +150,7 @@ export const VisualDesigner = (): JSX.Element => {
       name: "MediSense AI",
       description:
         "Patient-first AI medical assistant using RAG to provide accurate, personalized health insights from uploaded reports, with biomarker tracking, prescription analysis, and an always-on AI doctor.",
-      github: "https://github.com/charan270469/medisense",
+      github: " https://medisense-two.vercel.app/",
       tech: [
         "React",
         "TypeScript",
