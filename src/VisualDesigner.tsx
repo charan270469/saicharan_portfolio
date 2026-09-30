@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 import prBwlow1 from "./pr_bwlow.png";
+// Preload the hero image immediately so the browser fetches it before React renders
+const _preloadHeroImg = new Image();
+_preloadHeroImg.src = prBwlow1;
 import loanLensImage from "../Loanlens_project1_cover.png";
 import autoopsImage from "../Autoops_project2_cover.png";
 import scangoImage from "../Scango_project3_cover.png";
@@ -685,6 +688,8 @@ export const VisualDesigner = (): JSX.Element => {
                         <img
                           src={prBwlow1}
                           alt="Sai Charan (saicharandev)"
+                          loading="eager"
+                          fetchPriority="high"
                           onClick={handleImageClick}
                           style={{
                             height: "100%",
@@ -1240,7 +1245,8 @@ export const VisualDesigner = (): JSX.Element => {
                   <img
                     src={prBwlow1}
                     alt="Sai Charan (saicharandev) - Full-Stack Developer & AI Engineer Portfolio"
-                    loading="lazy"
+                    loading="eager"
+                    fetchPriority="high"
                     onClick={handleImageClick}
                     style={{
                       maxWidth: 650,
