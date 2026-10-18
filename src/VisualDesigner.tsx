@@ -8,10 +8,12 @@ import loanLensImage from "../Loanlens_project1_cover.png";
 import autoopsImage from "../Autoops_project2_cover.png";
 import scangoImage from "../Scango_project3_cover.png";
 import mediSenseImage from "../Medisense_project4_cover.png";
+import dailyEzImage from "../Dailyez_project5_cover.png";
 import loanLensArchiImage from "../loanlens_archi.png";
 import autoopsArchiImage from "../autoops_archi.png";
 import scangoArchiImage from "../scango_archi.png";
 import mediSenseArchiImage from "../medisense_ai_archi.png";
+import dailyEzArchiImage from "../dailyez_archi.png";
 import githubIcon from "./githubicon.svg";
 import linkedinIcon from "./linkedinicon.svg";
 import BorderGlow from "./BorderGlow";
@@ -176,6 +178,36 @@ export const VisualDesigner = (): JSX.Element => {
       architectureImage: mediSenseArchiImage,
       caseStudy:
         "Medical reports are dense, jargon-heavy, and disconnected from each other — patients leave clinics with PDFs they can't interpret and no longitudinal view of their own health. MediSense AI tackles this by building a full personal health intelligence layer on top of your medical history. Users upload lab reports, imaging scans, or prescriptions (JPG, PNG, or PDF); a Groq vision model (Llama 3.2 11B) extracts biomarkers and clinical data, generates a patient-friendly summary, and persists it to MongoDB. Every saved record then feeds into the RAG context for the AI Doctor — a chat interface powered by Llama 3.3 70B that answers health questions with awareness of your actual biomarkers, past risks, and current medications, not generic internet advice. A dedicated Prescription Analysis module identifies medications, suggests alternatives, and flags interactions. Recharts renders longitudinal biomarker trends across multiple reports, turning scattered uploads into a coherent health timeline. Key achievements: full RAG pipeline grounding every AI response in the user's own records, multi-modal ingestion across PDFs and images, Google OAuth 2.0 with JWT-scoped per-user data isolation in MongoDB, and a floating chat assistant available across all screens for instant triage and symptom severity assessment.",
+    },
+    {
+      id: 5,
+      name: "DailyEz",
+      description:
+        "Multi-agent inbox triage platform that unifies Gmail and WhatsApp, matches every message against plain-language Signals with explainable confidence, and adds a Whisper-powered voice assistant.",
+      github: "https://github.com/charan270469/dailyez",
+      tech: [
+        "React",
+        "TypeScript",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Groq",
+        "Whisper",
+        "Baileys",
+        "Gmail API",
+      ],
+      displayTech: [
+        "React",
+        "TypeScript",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Groq",
+      ],
+      image: dailyEzImage,
+      architectureImage: dailyEzArchiImage,
+      caseStudy:
+        "Most inbox filters match keywords, and keywords break the moment a message only sounds relevant. DailyEz lets you describe what matters in plain language, then runs every incoming Gmail and WhatsApp message through an orchestrated pipeline. Sender and domain rules are checked deterministically with no model call, a keyword prefilter skips clear non-matches, an extraction agent pulls structured facts, a classification agent returns a verdict with confidence, a one-line summary and written reasoning, and a verification agent re-audits anything the first pass was unsure about. That design came from a real bug: the model matched an unrelated company because both names contained the word Tech. It taught me to move checkable facts out of the LLM and put a second reader on the genuine judgment calls. Every match is explained in the UI with its confidence and a \"why this matched\" trail. Key achievements: Gmail OAuth2 with refresh token persistence and dedupe-safe sync, WhatsApp linked through Baileys with pairing codes and resumable sessions, incremental re-evaluation that skipped 848 already-checked messages in one recheck with zero model calls, rate limiting and a daily budget guard built around free-tier model limits, a cursor-paginated inbox with live match updates over SSE, and a voice assistant that summarizes chats, creates Signals and navigates the app.",
     },
   ];
 
