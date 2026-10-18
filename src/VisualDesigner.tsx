@@ -73,6 +73,57 @@ export const VisualDesigner = (): JSX.Element => {
   const projects = [
     {
       id: 1,
+      name: "DailyEz",
+      description:
+        "Multi-agent inbox triage platform that unifies Gmail and WhatsApp, matches every message against plain-language Signals with explainable confidence, and adds a Whisper-powered voice assistant.",
+      github: "https://github.com/charan270469/dailyez",
+      tech: [
+        "React",
+        "TypeScript",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Groq",
+        "Whisper",
+        "Baileys",
+        "Gmail API",
+      ],
+      displayTech: [
+        "React",
+        "TypeScript",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Groq",
+      ],
+      image: dailyEzImage,
+      architectureImage: dailyEzArchiImage,
+      caseStudy:
+        "Most inbox filters match keywords, and keywords break the moment a message only sounds relevant. DailyEz lets you describe what matters in plain language, then runs every incoming Gmail and WhatsApp message through an orchestrated pipeline. Sender and domain rules are checked deterministically with no model call, a keyword prefilter skips clear non-matches, an extraction agent pulls structured facts, a classification agent returns a verdict with confidence, a one-line summary and written reasoning, and a verification agent re-audits anything the first pass was unsure about. That design came from a real bug: the model matched an unrelated company because both names contained the word Tech. It taught me to move checkable facts out of the LLM and put a second reader on the genuine judgment calls. Every match is explained in the UI with its confidence and a \"why this matched\" trail. Key achievements: Gmail OAuth2 with refresh token persistence and dedupe-safe sync, WhatsApp linked through Baileys with pairing codes and resumable sessions, incremental re-evaluation that skipped 848 already-checked messages in one recheck with zero model calls, rate limiting and a daily budget guard built around free-tier model limits, a cursor-paginated inbox with live match updates over SSE, and a voice assistant that summarizes chats, creates Signals and navigates the app.",
+    },
+    {
+      id: 2,
+      name: "AutoOps AI",
+      description:
+        "Autonomous multi-agent workflow engine for enterprise operations with self-healing failure recovery, LLM-powered meeting intelligence, and a real-time audit dashboard.",
+      github: "https://github.com/charan270469/autoops_ai",
+      tech: [
+        "Groq",
+        "Llama 3.3 70B",
+        "n8n",
+        "Node.js",
+        "React",
+        "WebSocket",
+        "Tailwind CSS",
+      ],
+      displayTech: ["Groq", "Llama 3.3 70B", "n8n", "Node.js", "React"],
+      image: autoopsImage,
+      architectureImage: autoopsArchiImage,
+      caseStudy:
+        "Enterprise workflows fail silently — steps get blocked, tasks fall through, and there's no visibility until damage is done. AutoOps AI was built to solve exactly that. Six specialized AI agents (Orchestrator, Decision, HR, IT, Finance, Compliance) coordinate over three active n8n workflows to run a full 6-step employee onboarding end-to-end without human intervention. When failures occur, a self-healing engine classifies them as transient, dependency-based, or hard — then autonomously retries, reorders, or escalates with a drafted message, each decision logged with timestamp and confidence score. A separate Meeting Intelligence module lets you paste any transcript and get auto-extracted tasks with owners and deadlines via Groq + Llama 3.3 70B. Key achievements: reduced simulated onboarding time from 8 days to 2, achieved 80%+ autonomous workflow completion, delivered 100% decision auditability, and a live WebSocket dashboard with predictive SLA breach detection — all built for the ET GenAI Hackathon 2026.",
+    },
+    {
+      id: 3,
       name: "LoanLens AI",
       description:
         "Production-grade credit risk and loan underwriting platform with an ensemble ML model for PD, LGD, and EAD scoring, RAG-powered document grounding, and SHAP explainability.",
@@ -101,28 +152,7 @@ export const VisualDesigner = (): JSX.Element => {
         "Building a real-world credit risk engine meant going far beyond a single ML model. LoanLens AI orchestrates a 10-phase pipeline — from document ingestion via Landing AI's Agentic Data Extraction, through KPI calculation (income stability, debt ratios, account patterns), dual-mode fraud detection (text anomalies + OpenCV image tampering), all the way to an ensemble of XGBoost, LightGBM, and CatBoost models computing Probability of Default, Loss Given Default, and Exposure at Default. A policy decision engine then applies risk thresholds to auto-approve, flag for manual review, or reject. Every decision is explained via SHAP TreeExplainer and compiled into a human-readable Credit Assessment Memo (CAM), with LangChain RAG + FAISS enabling document-grounded Q&A. Key achievements: full PD/LGD/EAD scoring pipeline with configurable model modes (synthetic, shadow, real), SHAP-driven explainability surfacing the top 5 risk drivers per decision, and a React dashboard with Recharts visualizations and KaTeX-rendered risk math.",
     },
     {
-      id: 2,
-      name: "AutoOps AI",
-      description:
-        "Autonomous multi-agent workflow engine for enterprise operations with self-healing failure recovery, LLM-powered meeting intelligence, and a real-time audit dashboard.",
-      github: "https://github.com/charan270469/autoops_ai",
-      tech: [
-        "Groq",
-        "Llama 3.3 70B",
-        "n8n",
-        "Node.js",
-        "React",
-        "WebSocket",
-        "Tailwind CSS",
-      ],
-      displayTech: ["Groq", "Llama 3.3 70B", "n8n", "Node.js", "React"],
-      image: autoopsImage,
-      architectureImage: autoopsArchiImage,
-      caseStudy:
-        "Enterprise workflows fail silently — steps get blocked, tasks fall through, and there's no visibility until damage is done. AutoOps AI was built to solve exactly that. Six specialized AI agents (Orchestrator, Decision, HR, IT, Finance, Compliance) coordinate over three active n8n workflows to run a full 6-step employee onboarding end-to-end without human intervention. When failures occur, a self-healing engine classifies them as transient, dependency-based, or hard — then autonomously retries, reorders, or escalates with a drafted message, each decision logged with timestamp and confidence score. A separate Meeting Intelligence module lets you paste any transcript and get auto-extracted tasks with owners and deadlines via Groq + Llama 3.3 70B. Key achievements: reduced simulated onboarding time from 8 days to 2, achieved 80%+ autonomous workflow completion, delivered 100% decision auditability, and a live WebSocket dashboard with predictive SLA breach detection — all built for the ET GenAI Hackathon 2026.",
-    },
-    {
-      id: 3,
+      id: 4,
       name: "ScanGo",
       description:
         "AI-powered smart retail system bridging physical shopping and digital convenience with real-time inventory sync, blockchain-signed QR receipts, and a dual-mode cashier/guard terminal.",
@@ -151,7 +181,7 @@ export const VisualDesigner = (): JSX.Element => {
         "Traditional retail checkout is fragmented — long queues, no intelligence at the shelf, and zero fraud prevention at exit. ScanGo reimagines the entire journey across three phases. Customers scan barcodes to build a live cart with real-time subtotals and savings, assisted by a Groq-powered AI chat for in-store queries. At checkout, Ethers.js generates cryptographically signed QR receipt payloads stored against Supabase. At the exit, a dedicated Guard Terminal (separate React app) validates the QR against database state in real time, preventing shrinkage. A Twilio integration handles phone-based customer authentication. Key achievements: end-to-end retail flow from scan to verified exit in a single platform, blockchain-signed receipts for tamper-proof verification, dual-mode employee terminal adapting UI for cashier vs. guard roles, and a fully event-driven architecture with shared backend services across both apps.",
     },
     {
-      id: 4,
+      id: 5,
       name: "MediSense AI",
       description:
         "Patient-first AI medical assistant using RAG to provide accurate, personalized health insights from uploaded reports, with biomarker tracking, prescription analysis, and an always-on AI doctor.",
@@ -178,36 +208,6 @@ export const VisualDesigner = (): JSX.Element => {
       architectureImage: mediSenseArchiImage,
       caseStudy:
         "Medical reports are dense, jargon-heavy, and disconnected from each other — patients leave clinics with PDFs they can't interpret and no longitudinal view of their own health. MediSense AI tackles this by building a full personal health intelligence layer on top of your medical history. Users upload lab reports, imaging scans, or prescriptions (JPG, PNG, or PDF); a Groq vision model (Llama 3.2 11B) extracts biomarkers and clinical data, generates a patient-friendly summary, and persists it to MongoDB. Every saved record then feeds into the RAG context for the AI Doctor — a chat interface powered by Llama 3.3 70B that answers health questions with awareness of your actual biomarkers, past risks, and current medications, not generic internet advice. A dedicated Prescription Analysis module identifies medications, suggests alternatives, and flags interactions. Recharts renders longitudinal biomarker trends across multiple reports, turning scattered uploads into a coherent health timeline. Key achievements: full RAG pipeline grounding every AI response in the user's own records, multi-modal ingestion across PDFs and images, Google OAuth 2.0 with JWT-scoped per-user data isolation in MongoDB, and a floating chat assistant available across all screens for instant triage and symptom severity assessment.",
-    },
-    {
-      id: 5,
-      name: "DailyEz",
-      description:
-        "Multi-agent inbox triage platform that unifies Gmail and WhatsApp, matches every message against plain-language Signals with explainable confidence, and adds a Whisper-powered voice assistant.",
-      github: "https://github.com/charan270469/dailyez",
-      tech: [
-        "React",
-        "TypeScript",
-        "Node.js",
-        "Express",
-        "MongoDB",
-        "Groq",
-        "Whisper",
-        "Baileys",
-        "Gmail API",
-      ],
-      displayTech: [
-        "React",
-        "TypeScript",
-        "Node.js",
-        "Express",
-        "MongoDB",
-        "Groq",
-      ],
-      image: dailyEzImage,
-      architectureImage: dailyEzArchiImage,
-      caseStudy:
-        "Most inbox filters match keywords, and keywords break the moment a message only sounds relevant. DailyEz lets you describe what matters in plain language, then runs every incoming Gmail and WhatsApp message through an orchestrated pipeline. Sender and domain rules are checked deterministically with no model call, a keyword prefilter skips clear non-matches, an extraction agent pulls structured facts, a classification agent returns a verdict with confidence, a one-line summary and written reasoning, and a verification agent re-audits anything the first pass was unsure about. That design came from a real bug: the model matched an unrelated company because both names contained the word Tech. It taught me to move checkable facts out of the LLM and put a second reader on the genuine judgment calls. Every match is explained in the UI with its confidence and a \"why this matched\" trail. Key achievements: Gmail OAuth2 with refresh token persistence and dedupe-safe sync, WhatsApp linked through Baileys with pairing codes and resumable sessions, incremental re-evaluation that skipped 848 already-checked messages in one recheck with zero model calls, rate limiting and a daily budget guard built around free-tier model limits, a cursor-paginated inbox with live match updates over SSE, and a voice assistant that summarizes chats, creates Signals and navigates the app.",
     },
   ];
 
@@ -2304,11 +2304,11 @@ export const VisualDesigner = (): JSX.Element => {
                                           width: "100%",
                                           maxWidth: isMobile
                                             ? "100%"
-                                            : "2000px",
+                                            : "900px",
                                           height: "auto",
                                           maxHeight: isMobile
                                             ? "400px"
-                                            : "2000px",
+                                            : "550px",
                                           objectFit: "contain",
                                           borderRadius: "12px",
                                           border:
