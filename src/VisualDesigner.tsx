@@ -3352,8 +3352,8 @@ export const VisualDesigner = (): JSX.Element => {
                       <button
                         onClick={() => {
                           const link = document.createElement("a");
-                          link.href = "/charan_resume.pdf";
-                          link.download = "charan_resume.pdf";
+                          link.href = "/Sai_Charan_Vullengala_Resume.pdf";
+                          link.download = "Sai_Charan_Vullengala_Resume.pdf";
                           link.click();
                         }}
                         style={{
