@@ -1,0 +1,155 @@
+# Nginx Server Configuration for SEO & Performance Optimization
+# Add this to your Nginx server block configuration
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 1. Basic Server Configuration
+# ═══════════════════════════════════════════════════════════════════════════
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name saicharan.dev www.saicharan.dev;  # Change to your domain
+    
+    # Redirect HTTP to HTTPS
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name saicharan.dev www.saicharan.dev;  # Change to your domain
+    
+    # SSL Configuration (use certbot or Let's Encrypt)
+    ssl_certificate /path/to/your/certificate.crt;
+    ssl_certificate_key /path/to/your/private.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    
+    # Redirect www to non-www
+    if ($server_name = www.saicharan.dev) {
+        return 301 https://saicharan.dev$request_uri;
+    }
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # 2. Root Directory
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    root /var/www/your-portfolio;  # Change path to your project
+    index index.html index.htm;
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # 3. GZIP Compression
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1000;
+    gzip_types text/plain text/css text/xml text/javascript 
+               application/x-javascript application/xml+rss 
+               application/javascript application/json;
+    gzip_disable "msie6";
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # 4. Security Headers
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+    
+    # Strict Transport Security (HSTS)
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # 5. Cache Control
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    # Cache images
+    location ~* \.(jpg|jpeg|png|gif|webp|ico|svg)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+    
+    # Cache fonts
+    location ~* \.(woff|woff2|ttf|otf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        add_header Access-Control-Allow-Origin "*";
+    }
+    
+    # Cache CSS and JavaScript
+    location ~* \.(js|css)$ {
+        expires 30d;
+        add_header Cache-Control "public, must-revalidate";
+    }
+    
+    # Cache HTML
+    location ~* \.(html)$ {
+        expires 1h;
+        add_header Cache-Control "public, must-revalidate";
+    }
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # 6. Block Access to Sensitive Files
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+    
+    location ~ ~$ {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+    
+    # Block access to sensitive files
+    location ~ \.(env|json|lock|sql|yaml|yml|config)$ {
+        deny all;
+    }
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # 7. Robots and Sitemap
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    location = /robots.txt {
+        access_log off;
+        log_not_found off;
+        expires 24h;
+    }
+    
+    location = /sitemap.xml {
+        access_log off;
+        log_not_found off;
+        expires 24h;
+    }
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # 8. Single Page Application Routing
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    # Try to serve the requested file, directory, or fall back to index.html
+    location / {
+        try_files $uri $uri/ /index.html;
+        
+        # Disable caching for index.html
+        if ($request_filename ~ index\.html$) {
+            add_header Cache-Control "public, must-revalidate";
+            expires 1h;
+        }
+    }
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # 9. Logging
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    access_log /var/log/nginx/portfolio-access.log;
+    error_log /var/log/nginx/portfolio-error.log warn;
+}
