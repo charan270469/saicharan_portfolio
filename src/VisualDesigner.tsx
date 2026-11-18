@@ -252,9 +252,8 @@ export const VisualDesigner = (): JSX.Element => {
       if (mobile) {
         setScale(1);
       } else {
-        const scaleX = (window.innerWidth - 24) / (DESIGN_W + 184);
-        const scaleY = (window.innerHeight - 24) / (DESIGN_H + 30);
-        // Cap scale at 1.0 to prevent things from becoming too big on large screens
+        const scaleX = (window.innerWidth - 48) / (DESIGN_W + 120);
+        const scaleY = window.innerHeight / DESIGN_H;
         setScale(Math.min(1, scaleX, scaleY));
       }
     };
@@ -875,7 +874,7 @@ export const VisualDesigner = (): JSX.Element => {
                   <div
                     style={{
                       position: "absolute",
-                      top: 52,
+                      top: 48,
                       left: -40,
                       width: 1520,
                       height: 736,
@@ -887,7 +886,7 @@ export const VisualDesigner = (): JSX.Element => {
                       backgroundColor="rgba(30,29,28,1)"
                       borderRadius={24}
                       glowColor="40 80 80"
-                      glowRadius={40}
+                      glowRadius={20}
                       glowIntensity={0.7}
                       edgeSensitivity={30}
                       coneSpread={25}
